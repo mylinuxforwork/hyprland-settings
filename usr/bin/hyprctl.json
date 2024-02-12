@@ -9,7 +9,7 @@
     },
     {
         "key": "general:gaps_in",
-        "value": 5
+        "value": 10
     },
     {
         "key": "general:gaps_out",
@@ -21,7 +21,7 @@
     },
     {
         "key": "general:resize_on_border",
-        "value": false
+        "value": true
     },
     {
         "key": "general:hover_icon_on_border",
@@ -41,7 +41,7 @@
     },
     {
         "key": "decoration:inactive_opacity",
-        "value": 1.0
+        "value": 0.8
     },
     {
         "key": "decoration:fullscreen_opacity",
@@ -53,11 +53,11 @@
     },
     {
         "key": "decoration:shadow_range",
-        "value": 4
+        "value": 1
     },
     {
         "key": "decoration:shadow_render_power",
-        "value": 3
+        "value": 2
     },
     {
         "key": "decoration:shadow_ignore_window",
@@ -69,11 +69,11 @@
     },
     {
         "key": "decoration:dim_strength",
-        "value": 5
+        "value": 0.4
     },
     {
         "key": "decoration:dim_special",
-        "value": 2
+        "value": 0.4
     },
     {
         "key": "decoration:blur:enabled",
@@ -81,19 +81,19 @@
     },
     {
         "key": "decoration:blur:size",
-        "value": 8
+        "value": 2
     },
     {
         "key": "decoration:blur:passes",
-        "value": 1
+        "value": 8
     },
     {
         "key": "decoration:blur:ignore_opacity",
-        "value": false
+        "value": true
     },
     {
         "key": "decoration:blur:xray",
-        "value": false
+        "value": true
     },
     {
         "key": "animations:enabled",
