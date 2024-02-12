@@ -66,7 +66,9 @@ class MyApp(Adw.Application):
         # Load data from hyprctl
         
         hyprctl_file = open(pathname + '/hyprctl.json')
-        self.hyprctl = json.load(hyprctl_file)
+        hyprctl_arr = json.load(hyprctl_file)
+        for row in hyprctl_arr:
+            self.hyprctl[row["key"]] = row["value"]
 
         # Load Default configuration
         config_file = open(pathname + '/settings.json')  
@@ -82,10 +84,16 @@ class MyApp(Adw.Application):
             for i in p["rows"]:
                 if i["keyword"] not in self.hyprctl:
                     value = i["default"]
+                    self.hyprctl[i["keyword"]] = value
                 else:
-                    value = self.hyprctl[i["keyword"]]
+                    if (i["type"] == "SpinRowFloat"):
+                        value = self.hyprctl[i["keyword"]]*10
+                    else:
+                        value = self.hyprctl[i["keyword"]]
                 if i["type"] == "SpinRow":
                     self.createSpinRow(prefGroup,i,value)
+                if i["type"] == "SpinRowFloat":
+                    self.createSpinFloatRow(prefGroup,i,value)
                 elif i["type"] == "SwitchRow":
                     self.createSwitchRow(prefGroup,i,value)        
 
@@ -93,7 +101,7 @@ class MyApp(Adw.Application):
 
         # Show Application Window
         win.present()
-        print (":: Welcome to ML4W Settings App")
+        print (":: Welcome to ML4W Hyprland Settings App")
 
     # ------------------------------------------------------
     # Row Templates
@@ -115,8 +123,30 @@ class MyApp(Adw.Application):
         pref.add(spinRow)
 
     def on_spin_change(self,adjust,*data):
+        print("Execute: hyprctl keyword " + data[1]["keyword"] + " " + str(int(adjust.get_value())))
         subprocess.Popen(["hyprctl", "keyword", data[1]["keyword"], str(int(adjust.get_value()))])
         self.updateHyprctl(data[1]["keyword"],int(adjust.get_value()))
+
+    # SpinRowFloat
+    def createSpinFloatRow(self,pref,row,value):
+        spinRow = Adw.SpinRow()
+        spinRow.set_title(row["title"])
+        spinRow.set_subtitle(row["subtitle"])
+        adjust = Gtk.Adjustment()
+        adjust.set_lower(row["lower"])
+        adjust.set_upper(row["upper"])
+        adjust.set_value(int(value))
+        adjust.set_step_increment(row["step"])
+        
+        spinRow.set_adjustment(adjust)
+        adjust.connect("value-changed", self.on_spinfloat_change, adjust, row)
+        pref.add(spinRow)
+
+    def on_spinfloat_change(self,adjust,*data):
+        value = adjust.get_value()/10
+        print("Execute: hyprctl keyword " + data[1]["keyword"] + " " + str(value))
+        subprocess.Popen(["hyprctl", "keyword", data[1]["keyword"], str(value)])
+        self.updateHyprctl(data[1]["keyword"],value)
 
     #SwitchRow
     def createSwitchRow(self,pref,row,value):
@@ -128,12 +158,13 @@ class MyApp(Adw.Application):
         pref.add(switchRow)
 
     def on_switch_change(self,widget,*data):
-        if widget.get_active():
-            value = "1"
+        if (widget.get_active()):
+            value = "true"
         else:
-            value = "0"
+            value = "false"
+        print("Execute: hyprctl keyword " + data[1]["keyword"] + " " + value)
         subprocess.Popen(["hyprctl", "keyword", data[1]["keyword"], value])
-        self.updateHyprctl(data[1]["keyword"],value)
+        self.updateHyprctl(data[1]["keyword"],widget.get_active())
 
     # ------------------------------------------------------
     # Write hyprctl.sh
@@ -141,8 +172,14 @@ class MyApp(Adw.Application):
 
     def updateHyprctl(self,keyword,value):
         self.hyprctl[keyword] = value
+
+        result = []
+
+        for k, v in self.hyprctl.items():
+            result.append({'key': k, 'value': v})
+
         with open(pathname + '/hyprctl.json', 'w', encoding='utf-8') as f:
-            json.dump(self.hyprctl, f, ensure_ascii=False, indent=4)
+            json.dump(result, f, ensure_ascii=False, indent=4)
 
     # ------------------------------------------------------
     # About Window

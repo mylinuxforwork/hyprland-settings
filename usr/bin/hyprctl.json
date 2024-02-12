@@ -1,4 +1,106 @@
-{
-    "general:border_size": 1,
-    "general:gaps_in": 7
-}
+[
+    {
+        "key": "general:border_size",
+        "value": 1
+    },
+    {
+        "key": "general:no_border_on_floating",
+        "value": false
+    },
+    {
+        "key": "general:gaps_in",
+        "value": 5
+    },
+    {
+        "key": "general:gaps_out",
+        "value": 20
+    },
+    {
+        "key": "general:cursor_inactive_timeout",
+        "value": 0
+    },
+    {
+        "key": "general:resize_on_border",
+        "value": false
+    },
+    {
+        "key": "general:hover_icon_on_border",
+        "value": true
+    },
+    {
+        "key": "general:extend_border_grab_area",
+        "value": 15
+    },
+    {
+        "key": "decoration:rounding",
+        "value": 10
+    },
+    {
+        "key": "decoration:active_opacity",
+        "value": 10
+    },
+    {
+        "key": "decoration:inactive_opacity",
+        "value": 1.0
+    },
+    {
+        "key": "decoration:fullscreen_opacity",
+        "value": 10
+    },
+    {
+        "key": "decoration:drop_shadow",
+        "value": true
+    },
+    {
+        "key": "decoration:shadow_range",
+        "value": 4
+    },
+    {
+        "key": "decoration:shadow_render_power",
+        "value": 3
+    },
+    {
+        "key": "decoration:shadow_ignore_window",
+        "value": true
+    },
+    {
+        "key": "decoration:dim_inactive",
+        "value": false
+    },
+    {
+        "key": "decoration:dim_strength",
+        "value": 5
+    },
+    {
+        "key": "decoration:dim_special",
+        "value": 2
+    },
+    {
+        "key": "decoration:blur:enabled",
+        "value": true
+    },
+    {
+        "key": "decoration:blur:size",
+        "value": 8
+    },
+    {
+        "key": "decoration:blur:passes",
+        "value": 1
+    },
+    {
+        "key": "decoration:blur:ignore_opacity",
+        "value": false
+    },
+    {
+        "key": "decoration:blur:xray",
+        "value": false
+    },
+    {
+        "key": "animations:enabled",
+        "value": true
+    },
+    {
+        "key": "animations:first_launch_animation",
+        "value": true
+    }
+]

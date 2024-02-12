@@ -9,43 +9,248 @@
                     "title": "Border Size",
                     "subtitle": "Define general:border_size in pixels",
                     "keyword": "general:border_size",
-                    "lower": 1,
+                    "lower": 0,
                     "upper": 10,
                     "step": 1,
                     "default": 8
                 },
                 {
+                    "type": "SwitchRow",
+                    "title": "No Border On Floating",
+                    "subtitle": "Disable borders for floating windows",
+                    "keyword": "general:no_border_on_floating",
+                    "default": false
+                },
+                {
                     "type": "SpinRow",
-                    "title": "Windows Inner Gaps",
-                    "subtitle": "Define general:gaps_in in pixels",
+                    "title": "Windows Gaps In",
+                    "subtitle": "Define gaps between windows",
                     "keyword": "general:gaps_in",
                     "lower": 1,
                     "upper": 20,
-                    "step": 3,
-                    "default": 7
-                }
+                    "step": 1,
+                    "default": 5
+                },
+                {
+                    "type": "SpinRow",
+                    "title": "Windows Gaps Out",
+                    "subtitle": "Define gaps between windows and monitor edges",
+                    "keyword": "general:gaps_out",
+                    "lower": 1,
+                    "upper": 40,
+                    "step": 1,
+                    "default": 20
+                },
+                {
+                    "type": "SpinRow",
+                    "title": "Cursor Inactive Timeout",
+                    "subtitle": "After how many seconds of cursor’s inactivity to hide it (0 for never)",
+                    "keyword": "general:cursor_inactive_timeout",
+                    "lower": 0,
+                    "upper": 60,
+                    "step": 1,
+                    "default": 0
+                },
+                {
+                    "type": "SwitchRow",
+                    "title": "Resize Windows On Border",
+                    "subtitle": "Enables resizing windows by clicking and dragging on borders and gaps",
+                    "keyword": "general:resize_on_border",
+                    "default": false
+                },
+                {
+                    "type": "SwitchRow",
+                    "title": "Hover Icon On Border",
+                    "subtitle": "Show a cursor icon when hovering over borders",
+                    "keyword": "general:hover_icon_on_border",
+                    "default": true
+                },
+                {
+                    "type": "SpinRow",
+                    "title": "Extend Border Grab Area",
+                    "subtitle": "Extends the area around the border where you can click and drag on",
+                    "keyword": "general:extend_border_grab_area",
+                    "lower": 5,
+                    "upper": 30,
+                    "step": 5,
+                    "default": 15
+                }          
             ]
         },
         {
-            "title": "Keyboard",
-            "description": "Change keyboard settings for your windows.",
+            "title": "Decoration",
+            "description": "Change decoration settings for your windows.",
+            "rows": [
+                {
+                    "type": "SpinRow",
+                    "title": "Window Rounding",
+                    "subtitle": "Define rounded corners’ radius (in layout px)",
+                    "keyword": "decoration:rounding",
+                    "lower": 0,
+                    "upper": 40,
+                    "step": 1,
+                    "default": 10
+                },
+                {
+                    "type": "SpinRowFloat",
+                    "title": "Window Active Opacity",
+                    "subtitle": "Define opacity of active windows.",
+                    "keyword": "decoration:active_opacity",
+                    "lower": 5,
+                    "upper": 10,
+                    "step": 1,
+                    "default": 10
+                },
+                {
+                    "type": "SpinRowFloat",
+                    "title": "Window Inactive Opacity",
+                    "subtitle": "Define opacity of inactive windows.",
+                    "keyword": "decoration:inactive_opacity",
+                    "lower": 5,
+                    "upper": 10,
+                    "step": 1,
+                    "default": 9
+                },
+                {
+                    "type": "SpinRowFloat",
+                    "title": "Window Fullscreen Opacity",
+                    "subtitle": "Define opacity of fullscreen windows.",
+                    "keyword": "decoration:fullscreen_opacity",
+                    "lower": 5,
+                    "upper": 10,
+                    "step": 1,
+                    "default": 10
+                },
+                {
+                    "type": "SwitchRow",
+                    "title": "Window Drop Shadow",
+                    "subtitle": "Toggle window drop shadow",
+                    "keyword": "decoration:drop_shadow",
+                    "default": true
+                },
+                {
+                    "type": "SpinRow",
+                    "title": "Window Shadow Range",
+                    "subtitle": "Define shadow range for window shadows.",
+                    "keyword": "decoration:shadow_range",
+                    "lower": 0,
+                    "upper": 40,
+                    "step": 1,
+                    "default": 4
+                },
+                {
+                    "type": "SpinRow",
+                    "title": "Window Shadow Render Power",
+                    "subtitle": "Define shadow render power for window shadows.",
+                    "keyword": "decoration:shadow_render_power",
+                    "lower": 1,
+                    "upper": 4,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "SwitchRow",
+                    "title": "Window Shadow Ignore Window",
+                    "subtitle": "Ignore window shadow",
+                    "keyword": "decoration:shadow_ignore_window",
+                    "default": true
+                },
+                {
+                    "type": "SwitchRow",
+                    "title": "Window Inactive Dimming",
+                    "subtitle": "Enables dimming of inactive windows",
+                    "keyword": "decoration:dim_inactive",
+                    "default": false
+                },
+                {
+                    "type": "SpinRowFloat",
+                    "title": "Window Dimming Strength",
+                    "subtitle": "Define the strength for window dimming",
+                    "keyword": "decoration:dim_strength",
+                    "lower": 0,
+                    "upper": 10,
+                    "step": 1,
+                    "default": 5
+                },
+                {
+                    "type": "SpinRowFloat",
+                    "title": "Window Dimming Special",
+                    "subtitle": "Define how much to dim the rest of the screen by when a special workspace is open.",
+                    "keyword": "decoration:dim_special",
+                    "lower": 0,
+                    "upper": 10,
+                    "step": 1,
+                    "default": 2
+                }                                                
+            ]
+        },
+        {
+            "title": "Blur",
+            "description": "Blur settings for your windows.",
             "rows": [
                 {
                     "type": "SwitchRow",
                     "title": "Blue Enabled",
-                    "subtitle": "Define decoration:blur:enabled",
+                    "subtitle": "Enable kawase window background blur",
                     "keyword": "decoration:blur:enabled",
+                    "default": true
+                },                
+                {
+                    "type": "SpinRow",
+                    "title": "Blur Size",
+                    "subtitle": "Define the size for the blur effect",
+                    "keyword": "decoration:blur:size",
+                    "lower": 0,
+                    "upper": 40,
+                    "step": 1,
+                    "default": 8
+                },                
+                {
+                    "type": "SpinRow",
+                    "title": "Blur Passes",
+                    "subtitle": "Define the amount of passes to perform",
+                    "keyword": "decoration:blur:passes",
+                    "lower": 0,
+                    "upper": 40,
+                    "step": 1,
+                    "default": 1
+                },
+                {
+                    "type": "SwitchRow",
+                    "title": "Blur Ignore Opacity",
+                    "subtitle": "Make the blur layer ignore the opacity of the window",
+                    "keyword": "decoration:blur:ignore_opacity",
                     "default": false
                 },
+                {
+                    "type": "SwitchRow",
+                    "title": "Blur Xray",
+                    "subtitle": "Floating windows will ignore tiled windows in their blur",
+                    "keyword": "decoration:blur:xray",
+                    "default": false
+                }    
+            ]
+        },
+        {
+            "title": "Animations",
+            "description": "Change animation settings.",
+            "rows": [
                 {
                     "type": "SwitchRow",
                     "title": "Animation Enabled",
                     "subtitle": "Define animations:enabled",
                     "keyword": "animations:enabled",
                     "default": true
+                },
+                {
+                    "type": "SwitchRow",
+                    "title": "Animation First Launch",
+                    "subtitle": "Enable first launch animation",
+                    "keyword": "animations:first_launch_animation",
+                    "default": true
                 }
+
             ]
         }
-
     ]
 }

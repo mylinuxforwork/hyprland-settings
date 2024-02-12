@@ -106,10 +106,10 @@
                 <property name="subtitle" translatable="true">Define the number of persistant workspaces.</property>
                 <property name="adjustment">
                   <object class="GtkAdjustment">
-                    <property name="lower">3</property>
-                    <property name="upper">10</property>
-                    <property name="step-increment">1</property>
-                    <property name="value">5</property>
+                    <property name="lower">0</property>
+                    <property name="upper">1</property>
+                    <property name="step-increment">0.1</property>
+                    <property name="value">1</property>
                   </object>
                 </property>
               </object>
