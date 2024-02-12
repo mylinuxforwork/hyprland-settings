@@ -1,0 +1,51 @@
+{
+    "groups": [
+        {
+            "title": "General",
+            "description": "Change appearance settings for your windows.",
+            "rows": [
+                {
+                    "type": "SpinRow",
+                    "title": "Border Size",
+                    "subtitle": "Define general:border_size in pixels",
+                    "keyword": "general:border_size",
+                    "lower": 1,
+                    "upper": 10,
+                    "step": 1,
+                    "default": 8
+                },
+                {
+                    "type": "SpinRow",
+                    "title": "Windows Inner Gaps",
+                    "subtitle": "Define general:gaps_in in pixels",
+                    "keyword": "general:gaps_in",
+                    "lower": 1,
+                    "upper": 20,
+                    "step": 3,
+                    "default": 7
+                }
+            ]
+        },
+        {
+            "title": "Keyboard",
+            "description": "Change keyboard settings for your windows.",
+            "rows": [
+                {
+                    "type": "SwitchRow",
+                    "title": "Blue Enabled",
+                    "subtitle": "Define decoration:blur:enabled",
+                    "keyword": "decoration:blur:enabled",
+                    "default": false
+                },
+                {
+                    "type": "SwitchRow",
+                    "title": "Animation Enabled",
+                    "subtitle": "Define animations:enabled",
+                    "keyword": "animations:enabled",
+                    "default": true
+                }
+            ]
+        }
+
+    ]
+}

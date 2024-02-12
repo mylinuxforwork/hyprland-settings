@@ -1,0 +1,201 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="Adw" version="1.0"/>
+  <template class="Ml4wSettingsWindow" parent="AdwPreferencesWindow">
+    <property name="default-width">800</property>
+    <property name="default-height">600</property>
+    <property name="title" translatable="true">Preferences</property>
+    <child>
+      <object class="AdwPreferencesPage" id="preference_page">
+        <property name="title" translatable="true">Settings</property>
+        <property name="icon-name">brush-monitor-symbolic</property>
+        <!--
+        <child>
+          <object class="AdwPreferencesGroup" id="prefgroup_window_hyprctl">
+            <property name="title" translatable="true">Windows</property>
+            <property name="description" translatable="true">Change appearance settings for your windows.</property>
+            <child type="header-suffix">
+              <object class="GtkSwitch">
+                <property name="halign">3</property>
+                <property name="valign">3</property>
+              </object>
+            </child>
+            
+            <child>
+              <object class="AdwExpanderRow">
+                <property name="title" translatable="true">Custom colors</property>
+                <property name="subtitle" translatable="true">Overwrite the colors generate by pywal</property>
+                <property name="show-enable-switch">true</property>
+                <child>
+                  <object class="AdwActionRow">
+                    <property name="title" translatable="true">Active Color</property>
+                    <child type="suffix">
+                      <object class="GtkColorDialogButton">
+                        <property name="halign">3</property>
+                        <property name="valign">3</property>
+                        <property name="dialog">
+                          <object class="GtkColorDialog"></object>
+                        </property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwActionRow">
+                    <property name="title" translatable="true">Inactive Color</property>
+                    <child type="suffix">
+                      <object class="GtkColorDialogButton">
+                        <property name="halign">3</property>
+                        <property name="valign">3</property>
+                        <property name="dialog">
+                          <object class="GtkColorDialog"></object>
+                        </property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>                  
+          </object>
+        </child>
+        <child>
+          <object class="AdwPreferencesGroup" id="prefgroup_variations">
+            <property name="title" translatable="true">Variations</property>
+            <property name="description" translatable="true">Select an existing variation configuration.</property>
+            <child>
+              <object class="AdwComboRow">
+                <property name="title" translatable="true">Animation</property>
+                <property name="subtitle" translatable="true">Choose a animation configuration</property>
+                <property name="model">
+                  <object class="GtkStringList">
+                    <items>
+                      <item>this</item>
+                      <item>is</item>
+                      <item>a</item>
+                      <item>string</item>
+                      <item>list</item>
+                    </items>
+                  </object>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
+          -->
+      </object>
+    </child>
+    <child>
+      <object class="AdwPreferencesPage">
+        <property name="title" translatable="true">Waybar</property>
+        <property name="icon-name">settings-symbolic</property>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="title" translatable="true">Interaction Settings</property>
+            <property name="description" translatable="true">Change how the app behaves during user interaction.</property>
+            <child type="header-suffix">
+              <object class="GtkButton">
+                <property name="halign">3</property>
+                <property name="valign">3</property>
+                <property name="icon-name">settings-symbolic</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSpinRow">
+                <property name="title" translatable="true">Workspaces</property>
+                <property name="subtitle" translatable="true">Define the number of persistant workspaces.</property>
+                <property name="adjustment">
+                  <object class="GtkAdjustment">
+                    <property name="lower">3</property>
+                    <property name="upper">10</property>
+                    <property name="step-increment">1</property>
+                    <property name="value">5</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwEntryRow">
+                <property name="title" translatable="true">A row can be an entry</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSwitchRow">
+                <property name="title" translatable="true">Blur Waybar</property>
+                <property name="subtitle" translatable="true">Set blur effect on Waybar</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSwitchRow">
+                <property name="title" translatable="true">Run on Startup</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwActionRow">
+                <property name="title" translatable="true">Show Toast</property>
+                <property name="activatable-widget">toast_button</property>
+                <child type="suffix">
+                  <object class="GtkButton" id="toast_button">
+                    <property name="halign">3</property>
+                    <property name="valign">3</property>
+                    <property name="label" translatable="true">show toast</property>
+                    <property name="icon-name">bread-symbolic</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="title" translatable="true">Data Settings</property>
+            <property name="description" translatable="true">Manage user data related settings.</property>
+            <child>
+              <object class="AdwSwitchRow">
+                <property name="title" translatable="true">Enable Telemetry</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSwitchRow">
+                <property name="title" translatable="true">Enable Auto-Updates</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwActionRow" id="subpage_row">
+                <property name="title" translatable="true">Additional Preferences</property>
+                <property name="activatable">true</property>
+                <child type="suffix">
+                  <object class="GtkImage">
+                    <property name="icon-name">go-next-symbolic</property>
+                    <style>
+                      <class name="dim-label"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+  <object class="AdwNavigationPage" id="subpage">
+    <property name="title" bind-source="subpage_row" bind-property="title" bind-flags="sync-create"/>
+    <child>
+      <object class="AdwStatusPage">
+        <property name="description" translatable="true">Custom Subpage</property>
+        <child>
+          <object class="GtkButton" id="subpage_button">
+            <property name="label" translatable="true">Go back</property>
+            <property name="halign">3</property>
+            <property name="valign">3</property>
+            <style>
+              <class name="suggested-action"/>
+              <class name="pill"/>
+            </style>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
