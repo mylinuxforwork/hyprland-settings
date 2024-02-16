@@ -1,8 +1,25 @@
 {
     "groups": [
         {
+            "title": "Processing",
+            "id": "processing",
+            "page": "options_page",
+            "description": "Enable or disable the hyprctl processing for Hyprland settings.",
+            "rows": [
+                {
+                    "type": "SwitchRow",
+                    "title": "Enable hyprctl processing",
+                    "subtitle": "Activate the processing with hyprctl",
+                    "keyword": "hyprctl:processing",
+                    "default": true
+                }
+            ]
+        },
+        {
             "title": "General",
+            "id": "general",
             "description": "Change appearance settings for your windows.",
+            "page": "settings_page",
             "rows": [
                 {
                     "type": "SpinRow",
@@ -79,7 +96,9 @@
         },
         {
             "title": "Decoration",
+            "id": "decoration",
             "description": "Change decoration settings for your windows.",
+            "page": "settings_page",
             "rows": [
                 {
                     "type": "SpinRow",
@@ -186,7 +205,9 @@
         },
         {
             "title": "Blur",
+            "id": "blur",
             "description": "Blur settings for your windows.",
+            "page": "settings_page",
             "rows": [
                 {
                     "type": "SwitchRow",
@@ -233,7 +254,9 @@
         },
         {
             "title": "Animations",
+            "id": "animations",
             "description": "Change animation settings.",
+            "page": "settings_page",
             "rows": [
                 {
                     "type": "SwitchRow",

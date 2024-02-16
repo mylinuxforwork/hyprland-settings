@@ -11,6 +11,8 @@ import subprocess
 import os
 import threading
 import json
+import pathlib
+import shutil
 
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
@@ -32,7 +34,8 @@ pathname = os.path.dirname(sys.argv[0])
 # -----------------------------------------
 class MainWindow(Adw.PreferencesWindow):
     __gtype_name__ = 'Ml4wSettingsWindow'
-    preference_page = Gtk.Template.Child()
+    settings_page = Gtk.Template.Child()
+    options_page = Gtk.Template.Child()
 
     # Get objects from template
     def __init__(self, *args, **kwargs):
@@ -43,29 +46,60 @@ class MainWindow(Adw.PreferencesWindow):
 # -----------------------------------------
 class MyApp(Adw.Application):
 
-    # Path to home folder
+    # Application Window
     win = Adw.ApplicationWindow()
+
+    # Path of Application
+    path_name = pathname
+
+    # Path to home folder
+    homeFolder = os.path.expanduser('~')
+
+    # config folder name
+    configFolderName = "ml4w-hyprland-settings"
+
+    # dotfiles folder name
+    dotfiles = homeFolder + "/dotfiles/"
+
+    # Config folder name
+    configFolder = homeFolder + "/.config/" + configFolderName
+
+    # dotfiles folder
+    dotfilesFolder = dotfiles + configFolderName
+
+    # Settingsfolder
+    settingsFolder = ""
+
+    # hyprctl.conf
+    hyprctlFile = ""
+
     hyprctl = {}
 
     def __init__(self, **kwargs):
-        super().__init__(application_id='com.ml4w.welcome',
+        super().__init__(application_id='com.ml4w.hyprlandsettings',
                          flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
 
     # Activation
     def do_activate(self):
+
+        # Setup Configuration      
+        self.runSetup()
+
+        # Define main window
         win = self.props.active_window
         if not win:
             win = MainWindow(application=self)
 
-        # Setup Configuration      
+        # get pages
+        self.settings_page = win.settings_page
+        self.options_page = win.options_page
 
-        # get preference page
-        self.preference_page = win.preference_page
+        # load hyprctl.sh on startup
+        self.init_hyprctl = True
 
-        # Load data from hyprctl
-        
-        hyprctl_file = open(pathname + '/hyprctl.json')
+        # Load hyprctl.json
+        hyprctl_file = open(self.settingsFolder + "/hyprctl.json")
         hyprctl_arr = json.load(hyprctl_file)
         for row in hyprctl_arr:
             self.hyprctl[row["key"]] = row["value"]
@@ -80,24 +114,48 @@ class MyApp(Adw.Application):
             prefGroup.set_title(p["title"])
             prefGroup.set_description(p["description"])
 
-            # Create Rows
-            for i in p["rows"]:
-                if i["keyword"] not in self.hyprctl:
-                    value = i["default"]
-                    self.hyprctl[i["keyword"]] = value
-                else:
-                    if (i["type"] == "SpinRowFloat"):
-                        value = self.hyprctl[i["keyword"]]*10
+            # Fill Used keywords
+            if p["id"] == "usedhyprctlkeywords":
+                self.options_page.add(prefGroup)
+            else:
+                # Create Rows
+                for i in p["rows"]:
+                    if i["keyword"] not in self.hyprctl:
+                        if i["keyword"] == "hyprctl:processing":
+                            value = i["default"]
+                            self.hyprctl[i["keyword"]] = i["default"]
+                        else:
+                            cur_val = self.getKeywordValue(i["keyword"])
+                            if (i["type"] == "SpinRowFloat"):
+                                value = int(float(cur_val["float"])*10)
+                            elif (i["type"] == "SwitchRow"):
+                                if cur_val["int"] == "1":
+                                    value = True
+                                else:
+                                    value = False
+                            else:
+                                value = cur_val["int"]
                     else:
-                        value = self.hyprctl[i["keyword"]]
-                if i["type"] == "SpinRow":
-                    self.createSpinRow(prefGroup,i,value)
-                if i["type"] == "SpinRowFloat":
-                    self.createSpinFloatRow(prefGroup,i,value)
-                elif i["type"] == "SwitchRow":
-                    self.createSwitchRow(prefGroup,i,value)        
+                        if (i["type"] == "SpinRowFloat"):
+                            value = self.hyprctl[i["keyword"]]*10
+                        else:
+                            value = self.hyprctl[i["keyword"]]
+                    if i["type"] == "SpinRow":
+                        self.createSpinRow(prefGroup,i,value)
+                    if i["type"] == "SpinRowFloat":
+                        self.createSpinFloatRow(prefGroup,i,value)
+                    elif i["type"] == "SwitchRow":
+                        self.createSwitchRow(prefGroup,i,value)        
 
-            self.preference_page.add(prefGroup)
+                if p["page"] == "settings_page":
+                    self.settings_page.add(prefGroup)
+                else:
+                    self.options_page.add(prefGroup)
+
+        if (self.init_hyprctl):
+            value = "true"
+            print("Execute: hyprctl.sh")
+            subprocess.Popen(self.settingsFolder + "/hyprctl.sh")
 
         # Show Application Window
         win.present()
@@ -153,8 +211,12 @@ class MyApp(Adw.Application):
         switchRow = Adw.SwitchRow()
         switchRow.set_title(row["title"])
         switchRow.set_subtitle(row["subtitle"])
-        switchRow.set_active(int(value))
-        switchRow.connect("notify::active", self.on_switch_change, row)
+        switchRow.set_active(value)
+        if (row["keyword"] == "hyprctl:processing"):
+            switchRow.connect("notify::active", self.on_switch_processing, row)
+            self.init_hyprctl = value
+        else:
+            switchRow.connect("notify::active", self.on_switch_change, row)
         pref.add(switchRow)
 
     def on_switch_change(self,widget,*data):
@@ -164,6 +226,17 @@ class MyApp(Adw.Application):
             value = "false"
         print("Execute: hyprctl keyword " + data[1]["keyword"] + " " + value)
         subprocess.Popen(["hyprctl", "keyword", data[1]["keyword"], value])
+        self.updateHyprctl(data[1]["keyword"],widget.get_active())
+
+    def on_switch_processing(self,widget,*data):
+        if (widget.get_active()):
+            value = "true"
+            print("Execute: hyprctl.sh")
+            subprocess.Popen(self.settingsFolder + "/hyprctl.sh")
+        else:
+            value = "false"
+            print("Execute: hyprctl reload")
+            subprocess.Popen(["hyprctl", "reload"])
         self.updateHyprctl(data[1]["keyword"],widget.get_active())
 
     # ------------------------------------------------------
@@ -178,7 +251,7 @@ class MyApp(Adw.Application):
         for k, v in self.hyprctl.items():
             result.append({'key': k, 'value': v})
 
-        with open(pathname + '/hyprctl.json', 'w', encoding='utf-8') as f:
+        with open(self.settingsFolder + '/hyprctl.json', 'w', encoding='utf-8') as f:
             json.dump(result, f, ensure_ascii=False, indent=4)
 
     # ------------------------------------------------------
@@ -203,6 +276,34 @@ class MyApp(Adw.Application):
     # ------------------------------------------------------
     # Helper Functions
     # ------------------------------------------------------
+
+    # Get current keyword value
+    def getKeywordValue(self,keyword):
+        result = subprocess.run("hyprctl getoption " + keyword, shell=True, capture_output=True, text=True)
+        outcome = result.stdout
+        int_out = outcome.split("\n")[1]
+        float_out = outcome.split("\n")[2]
+        int_val = int_out.split("int: ")[1]
+        float_val = float_out.split("float: ")[1]
+        return ({"int": int_val, "float": float_val})
+
+    # File setup
+    def runSetup(self):
+        if os.path.exists(self.dotfiles):
+            pathlib.Path(self.dotfilesFolder).mkdir(parents=True, exist_ok=True) 
+            self.settingsFolder = self.dotfilesFolder
+        else:
+            pathlib.Path(self.configFolder).mkdir(parents=True, exist_ok=True) 
+            self.settingsFolder = self.configFolder
+        print(":: Using configuration in: " + self.settingsFolder)
+        
+        if not os.path.exists(self.settingsFolder + '/hyprctl.sh'):
+            shutil.copy(self.path_name + '/hyprctl.sh', self.settingsFolder)
+            print(":: hyprctl.sh created in " + self.settingsFolder)
+
+        if not os.path.exists(self.settingsFolder + '/hyprctl.json'):
+            shutil.copy(self.path_name + '/hyprctl.json', self.settingsFolder)
+            print(":: hyprctl.json created in " + self.settingsFolder)
 
     # Add Application actions
     def create_action(self, name, callback, shortcuts=None):
