@@ -1,21 +1,6 @@
 {
     "groups": [
         {
-            "title": "Processing",
-            "id": "processing",
-            "page": "options_page",
-            "description": "Enable or disable the hyprctl processing for Hyprland settings.",
-            "rows": [
-                {
-                    "type": "SwitchRow",
-                    "title": "Enable hyprctl processing",
-                    "subtitle": "Activate the processing with hyprctl",
-                    "keyword": "hyprctl:processing",
-                    "default": true
-                }
-            ]
-        },
-        {
             "title": "General",
             "id": "general",
             "description": "Change appearance settings for your windows.",

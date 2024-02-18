@@ -36,6 +36,7 @@ class MainWindow(Adw.PreferencesWindow):
     __gtype_name__ = 'Ml4wSettingsWindow'
     settings_page = Gtk.Template.Child()
     options_page = Gtk.Template.Child()
+    keywords_group = Gtk.Template.Child()
 
     # Get objects from template
     def __init__(self, *args, **kwargs):
@@ -73,7 +74,14 @@ class MyApp(Adw.Application):
     # hyprctl.conf
     hyprctlFile = ""
 
+    # hyprctl dictionary synced with hyprctlfile
     hyprctl = {}
+
+    # rowtype dictionary for keywords
+    rowtype = {}
+
+    # Dictionary for action row objects
+    pref_rows = {}
 
     def __init__(self, **kwargs):
         super().__init__(application_id='com.ml4w.hyprlandsettings',
@@ -91,12 +99,33 @@ class MyApp(Adw.Application):
         if not win:
             win = MainWindow(application=self)
 
-        # get pages
+        # Get pages
         self.settings_page = win.settings_page
         self.options_page = win.options_page
 
+        # get groups
+        self.keywords_group = win.keywords_group
+
+        # Initialization
+        self.initUI()
+
         # load hyprctl.sh on startup
         self.init_hyprctl = True
+
+        if (self.init_hyprctl):
+            value = "true"
+            print("Execute: hyprctl.sh")
+            subprocess.Popen(self.settingsFolder + "/hyprctl.sh")
+
+        # Show Application Window
+        win.present()
+        print (":: Welcome to ML4W Hyprland Settings App")
+
+    # ------------------------------------------------------
+    # Init UI
+    # ------------------------------------------------------
+
+    def initUI(self):
 
         # Load hyprctl.json
         hyprctl_file = open(self.settingsFolder + "/hyprctl.json")
@@ -112,6 +141,7 @@ class MyApp(Adw.Application):
         for p in config["groups"]:
             prefGroup = Adw.PreferencesGroup()
             prefGroup.set_title(p["title"])
+            prefGroup.name="group_" + p["title"]
             prefGroup.set_description(p["description"])
 
             # Fill Used keywords
@@ -120,26 +150,28 @@ class MyApp(Adw.Application):
             else:
                 # Create Rows
                 for i in p["rows"]:
+                    # Get row values
                     if i["keyword"] not in self.hyprctl:
-                        if i["keyword"] == "hyprctl:processing":
-                            value = i["default"]
-                            self.hyprctl[i["keyword"]] = i["default"]
-                        else:
-                            cur_val = self.getKeywordValue(i["keyword"])
-                            if (i["type"] == "SpinRowFloat"):
-                                value = int(float(cur_val["float"])*10)
-                            elif (i["type"] == "SwitchRow"):
-                                if cur_val["int"] == "1":
-                                    value = True
-                                else:
-                                    value = False
+                        cur_val = self.getKeywordValue(i["keyword"])
+                        if (i["type"] == "SpinRowFloat"):
+                            value = int(float(cur_val["float"])*10)
+                        elif (i["type"] == "SwitchRow"):
+                            if cur_val["int"] == "1":
+                                value = True
                             else:
-                                value = cur_val["int"]
+                                value = False
+                        else:
+                            value = cur_val["int"]
                     else:
                         if (i["type"] == "SpinRowFloat"):
                             value = self.hyprctl[i["keyword"]]*10
                         else:
                             value = self.hyprctl[i["keyword"]]
+
+                    # Fill rowtype dictionary
+                    self.rowtype[i["keyword"]] = i["type"]
+                    
+                    # Create rows
                     if i["type"] == "SpinRow":
                         self.createSpinRow(prefGroup,i,value)
                     if i["type"] == "SpinRowFloat":
@@ -147,23 +179,30 @@ class MyApp(Adw.Application):
                     elif i["type"] == "SwitchRow":
                         self.createSwitchRow(prefGroup,i,value)        
 
-                if p["page"] == "settings_page":
-                    self.settings_page.add(prefGroup)
-                else:
-                    self.options_page.add(prefGroup)
-
-        if (self.init_hyprctl):
-            value = "true"
-            print("Execute: hyprctl.sh")
-            subprocess.Popen(self.settingsFolder + "/hyprctl.sh")
-
-        # Show Application Window
-        win.present()
-        print (":: Welcome to ML4W Hyprland Settings App")
+                self.settings_page.add(prefGroup)
+        
+        # Create keyword rows
+        for keyword in self.hyprctl:
+            self.createActionRow(keyword)
 
     # ------------------------------------------------------
     # Row Templates
     # ------------------------------------------------------
+
+    # ActionRow
+    def createActionRow(self,keyword):
+        actionRow = Adw.ActionRow()
+        actionRow.set_title(keyword)
+        btn = Gtk.Button()
+        btn.set_label("Remove")
+        btn.set_valign(3)
+        btn.connect("clicked",self.remove_keyword,keyword)
+        actionRow.add_suffix(btn)
+        self.keywords_group.add(actionRow)
+
+    def remove_keyword(self, widget,v):
+        self.removeHyptctl(v)
+        print(self.getKeywordValue(v))
 
     # SpinRow
     def createSpinRow(self,pref,row,value):
@@ -179,10 +218,13 @@ class MyApp(Adw.Application):
         spinRow.set_adjustment(adjust)
         adjust.connect("value-changed", self.on_spin_change, adjust, row)
         pref.add(spinRow)
+        self.pref_rows[row["keyword"]] = spinRow
 
     def on_spin_change(self,adjust,*data):
         print("Execute: hyprctl keyword " + data[1]["keyword"] + " " + str(int(adjust.get_value())))
         subprocess.Popen(["hyprctl", "keyword", data[1]["keyword"], str(int(adjust.get_value()))])
+        if data[1]["keyword"] not in self.hyprctl:
+            self.createActionRow(data[1]["keyword"])
         self.updateHyprctl(data[1]["keyword"],int(adjust.get_value()))
 
     # SpinRowFloat
@@ -199,11 +241,14 @@ class MyApp(Adw.Application):
         spinRow.set_adjustment(adjust)
         adjust.connect("value-changed", self.on_spinfloat_change, adjust, row)
         pref.add(spinRow)
+        self.pref_rows[row["keyword"]] = spinRow
 
     def on_spinfloat_change(self,adjust,*data):
         value = adjust.get_value()/10
         print("Execute: hyprctl keyword " + data[1]["keyword"] + " " + str(value))
         subprocess.Popen(["hyprctl", "keyword", data[1]["keyword"], str(value)])
+        if data[1]["keyword"] not in self.hyprctl:
+            self.createActionRow(data[1]["keyword"])
         self.updateHyprctl(data[1]["keyword"],value)
 
     #SwitchRow
@@ -212,12 +257,9 @@ class MyApp(Adw.Application):
         switchRow.set_title(row["title"])
         switchRow.set_subtitle(row["subtitle"])
         switchRow.set_active(value)
-        if (row["keyword"] == "hyprctl:processing"):
-            switchRow.connect("notify::active", self.on_switch_processing, row)
-            self.init_hyprctl = value
-        else:
-            switchRow.connect("notify::active", self.on_switch_change, row)
+        switchRow.connect("notify::active", self.on_switch_change, row)
         pref.add(switchRow)
+        self.pref_rows[row["keyword"]] = switchRow
 
     def on_switch_change(self,widget,*data):
         if (widget.get_active()):
@@ -237,11 +279,26 @@ class MyApp(Adw.Application):
             value = "false"
             print("Execute: hyprctl reload")
             subprocess.Popen(["hyprctl", "reload"])
+        if data[1]["keyword"] not in self.hyprctl:
+            self.createActionRow(data[1]["keyword"])
         self.updateHyprctl(data[1]["keyword"],widget.get_active())
 
     # ------------------------------------------------------
     # Write hyprctl.sh
     # ------------------------------------------------------
+
+    def removeHyptctl(self,keyword):
+        result = []
+        del_key = ""
+        for k, v in self.hyprctl.items():
+            if k != keyword:
+                result.append({'key': k, 'value': v})
+            else:
+                del_key = k
+        self.hyprctl.pop(del_key)
+
+        with open(self.settingsFolder + '/hyprctl.json', 'w', encoding='utf-8') as f:
+            json.dump(result, f, ensure_ascii=False, indent=4)       
 
     def updateHyprctl(self,keyword,value):
         self.hyprctl[keyword] = value
@@ -253,25 +310,6 @@ class MyApp(Adw.Application):
 
         with open(self.settingsFolder + '/hyprctl.json', 'w', encoding='utf-8') as f:
             json.dump(result, f, ensure_ascii=False, indent=4)
-
-    # ------------------------------------------------------
-    # About Window
-    # ------------------------------------------------------
-
-    def on_about(self, widget, _):
-        
-        dialog = Adw.AboutWindow(
-            application_icon="application-x-executable",
-            application_name="ML4W Settings",
-            developer_name="Stephan Raabe",
-            version="1.0.0",
-            website="https://gitlab.com/stephan-raabe/dotfiles",
-            issue_url="https://gitlab.com/stephan-raabe/dotfiles/-/issues",
-            support_url="https://gitlab.com/stephan-raabe/dotfiles/-/issues",
-            copyright="© 2024 Stephan Raabe",
-            license_type=Gtk.License.GPL_3_0_ONLY
-        )
-        dialog.present()
 
     # ------------------------------------------------------
     # Helper Functions
