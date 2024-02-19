@@ -19,7 +19,7 @@
         <child>
           <object class="AdwPreferencesGroup" id="keywords_group">
             <property name="title">Used Keywords</property>
-            <property name="description">By settings app overwritten keywords. Remove an entry to restore keyword from hyprland.conf.</property>
+            <property name="description">This list shows all keywords overwritten by the settings app. Remove an entry to restore keyword from hyprland.conf.</property>
           </object>
         </child>
       </object>

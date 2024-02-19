@@ -2,7 +2,6 @@
     "groups": [
         {
             "title": "General",
-            "id": "general",
             "description": "Change appearance settings for your windows.",
             "page": "settings_page",
             "rows": [
@@ -81,7 +80,6 @@
         },
         {
             "title": "Decoration",
-            "id": "decoration",
             "description": "Change decoration settings for your windows.",
             "page": "settings_page",
             "rows": [
@@ -190,7 +188,6 @@
         },
         {
             "title": "Blur",
-            "id": "blur",
             "description": "Blur settings for your windows.",
             "page": "settings_page",
             "rows": [
@@ -239,7 +236,6 @@
         },
         {
             "title": "Animations",
-            "id": "animations",
             "description": "Change animation settings.",
             "page": "settings_page",
             "rows": [
