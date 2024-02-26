@@ -1,4 +1,4 @@
 #!/bin/sh
 HERE="$(dirname "$(readlink -f "${0}")")"
-EXEC="${HERE}/usr/bin/ml4w-hyprland-settings.py"
+EXEC="${HERE}/usr/bin/ml4w-dotfiles-settings.py"
 python ${EXEC}
