@@ -14,12 +14,12 @@
     </child>
     <child>
       <object class="AdwPreferencesPage" id="options_page">
-        <property name="title">Options</property>
+        <property name="title">Set Variables</property>
         <property name="icon-name">open-menu-symbolic</property>
         <child>
           <object class="AdwPreferencesGroup" id="keywords_group">
-            <property name="title">Used Keywords</property>
-            <property name="description">This list shows all keywords overwritten by the settings app. Remove an entry to restore keyword from hyprland.conf.</property>
+            <property name="title">Used Variables</property>
+            <property name="description">This list shows all variables overwritten by the settings app. Remove an entry to restore keyword from hyprland.conf.</property>
           </object>
         </child>
       </object>

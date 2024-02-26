@@ -104,9 +104,17 @@ class MyApp(Adw.Application):
         for row in hyprctl_arr:
             self.hyprctl[row["key"]] = row["value"]
 
-        # Load Default configuration
-        config_file = open(pathname + '/settings.json')  
-        config = json.load(config_file)
+        if os.path.exists(self.settingsFolder + "/settings.json"):
+            # Load Custom configuration
+            config_file = open(self.settingsFolder + '/settings.json')  
+            config = json.load(config_file)
+            print(":: Using custom settings.json in " + self.settingsFolder)
+        else:
+            # Load Default configuration
+            config_file = open(pathname + '/settings.json')  
+            config = json.load(config_file)
+            print(":: Using default settings.json in " + pathname)
+        
 
         # Create Groups
         for p in config["groups"]:
@@ -138,6 +146,8 @@ class MyApp(Adw.Application):
                     self.createSpinFloatRow(prefGroup,i,value)
                 elif i["type"] == "SwitchRow":
                     self.createSwitchRow(prefGroup,i,value)        
+                elif i["type"] == "ColorRow":
+                    self.createColorRow(prefGroup,i,value)        
 
             self.settings_page.add(prefGroup)
         
@@ -234,6 +244,49 @@ class MyApp(Adw.Application):
             self.updateHyprctl(data[1]["keyword"],widget.get_active())
         self.keyword_blocked = False            
 
+    #SwitchRow
+    def createColorRow(self,pref,row,value):
+        colorRow = Adw.ActionRow()
+        colorRow.set_title(row["title"])
+        colorRow.set_subtitle(row["subtitle"])
+        color = Gtk.ColorDialogButton()
+        color.set_valign(3)
+        color_dialog = Gtk.ColorDialog()
+        color.connect("notify::rgba",self.on_color_select, row)
+        color.set_dialog(color_dialog)
+        colorRow.add_suffix(color)
+
+        # switchRow.set_active(value)
+        pref.add(colorRow)
+        # self.pref_rows[row["keyword"]] = switchRow
+
+    def rgb_to_hex(self, rgb):
+        r = int(rgb[0])
+        g = int(rgb[1])
+        b = int(rgb[2])
+        return f'{r:02x}{g:02x}{b:02x}'        
+
+    def rgba_to_hex(self, rgba):
+        print(rgba)
+        r = int(rgba[0])
+        g = int(rgba[1])
+        b = int(rgba[2])
+        a = int(float(rgba[3]) * 255)
+        return f'{a:02x}{r:02x}{g:02x}{b:02x}'        
+
+    def on_color_select(self,widget,*data):
+        rgbaStr = widget.get_rgba().to_string()
+        if "rgba" in rgbaStr:
+            rgbaStr = rgbaStr.replace("rgba(", "")
+            rgbaStr = rgbaStr.replace(")", "")
+            rgba_hex = "rgba(" + self.rgba_to_hex(rgbaStr.split(",")) + ")"
+        else:
+            rgbaStr = rgbaStr.replace("rgb(", "")
+            rgbaStr = rgbaStr.replace(")", "")
+            rgba_hex = "rgb(" + self.rgb_to_hex(rgbaStr.split(",")) + ")"
+
+        subprocess.Popen(["hyprctl", "keyword", data[1]["keyword"], rgba_hex])
+
     # Update and write hyprctl.json
     def removeHyptctl(self,keyword):
         result = []
@@ -263,11 +316,16 @@ class MyApp(Adw.Application):
         outcome = result.stdout
         int_out = outcome.split("\n")[1]
         float_out = outcome.split("\n")[2]
+        data_out = outcome.split("\n")[4]
         int_val = int_out.split("int: ")[1]
         float_val = float_out.split("float: ")[1]
+        data_val = data_out.split("data: ")[1]
 
         if (self.rowtype[keyword] == "SpinRowFloat"):
             value = int(float(float_val)*10)
+        elif (self.rowtype[keyword] == "ColorRow"):
+            print(data_val)
+            value = data_val
         elif (self.rowtype[keyword] == "SwitchRow"):
             if int_val == "1":
                 value = True

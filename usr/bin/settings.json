@@ -8,7 +8,7 @@
                 {
                     "type": "SpinRow",
                     "title": "Border Size",
-                    "subtitle": "Define general:border_size in pixels",
+                    "subtitle": "Define the window border size in pixels",
                     "keyword": "general:border_size",
                     "lower": 0,
                     "upper": 10,
@@ -44,6 +44,16 @@
                 },
                 {
                     "type": "SpinRow",
+                    "title": "Gaps Workspaces",
+                    "subtitle": "Define gaps between workspaces. Stacks with gaps_out.",
+                    "keyword": "general:gaps_workspaces",
+                    "lower": 0,
+                    "upper": 40,
+                    "step": 1,
+                    "default": 0
+                },
+                {
+                    "type": "SpinRow",
                     "title": "Cursor Inactive Timeout",
                     "subtitle": "After how many seconds of cursor’s inactivity to hide it (0 for never)",
                     "keyword": "general:cursor_inactive_timeout",
@@ -51,6 +61,13 @@
                     "upper": 60,
                     "step": 1,
                     "default": 0
+                },
+                {
+                    "type": "SwitchRow",
+                    "title": "No Focus Fallback",
+                    "subtitle": "If true, will not fall back to the next available window when moving focus in a direction where no window was found",
+                    "keyword": "general:no_focus_fallback",
+                    "default": false
                 },
                 {
                     "type": "SwitchRow",
@@ -75,7 +92,14 @@
                     "upper": 30,
                     "step": 5,
                     "default": 15
-                }          
+                },
+                {
+                    "type": "SwitchRow",
+                    "title": "Allow Tearing",
+                    "subtitle": "Master switch for allowing tearing to occur. Screen tearing is used to reduce latency and/or jitter in games.",
+                    "keyword": "general:allow_tearing",
+                    "default": false
+                }        
             ]
         },
         {
@@ -158,6 +182,16 @@
                     "default": true
                 },
                 {
+                    "type": "SpinRowFloat",
+                    "title": "Windw Shadow Scale",
+                    "subtitle": "Shadow scale of a window.",
+                    "keyword": "decoration:shadow_scale",
+                    "lower": 0,
+                    "upper": 10,
+                    "step": 1,
+                    "default": 10
+                },
+                {
                     "type": "SwitchRow",
                     "title": "Window Inactive Dimming",
                     "subtitle": "Enables dimming of inactive windows",
@@ -183,7 +217,17 @@
                     "upper": 10,
                     "step": 1,
                     "default": 2
-                }                                                
+                },
+                {
+                    "type": "SpinRowFloat",
+                    "title": "Window Dim Around",
+                    "subtitle": "Define how much the dimaround window rule.",
+                    "keyword": "decoration:dim_around",
+                    "lower": 0,
+                    "upper": 10,
+                    "step": 1,
+                    "default": 4
+                }                                                                
             ]
         },
         {
@@ -231,7 +275,74 @@
                     "subtitle": "Floating windows will ignore tiled windows in their blur",
                     "keyword": "decoration:blur:xray",
                     "default": false
-                }    
+                },
+                {
+                    "type": "SpinRowFloat",
+                    "title": "Blur Noise",
+                    "subtitle": "Define how much noise to apply.",
+                    "keyword": "decoration:blur:noise",
+                    "lower": 0,
+                    "upper": 10,
+                    "step": 1,
+                    "default": 1
+                },
+                {
+                    "type": "SpinRowFloat",
+                    "title": "Blur Contrast",
+                    "subtitle": "Define contrast modulation for blur.",
+                    "keyword": "decoration:blur:contrast",
+                    "lower": 0,
+                    "upper": 20,
+                    "step": 1,
+                    "default": 1
+                },
+                {
+                    "type": "SpinRowFloat",
+                    "title": "Blur Brightness",
+                    "subtitle": "Define brightness modulation for blur.",
+                    "keyword": "decoration:blur:brightness",
+                    "lower": 0,
+                    "upper": 20,
+                    "step": 1,
+                    "default": 1
+                },
+                {
+                    "type": "SpinRowFloat",
+                    "title": "Blur Vibrancy",
+                    "subtitle": "Increase saturation of blurred colors.",
+                    "keyword": "decoration:blur:vibrancy",
+                    "lower": 0,
+                    "upper": 10,
+                    "step": 1,
+                    "default": 1
+                },
+                {
+                    "type": "SpinRowFloat",
+                    "title": "Blur Vibrancy Darkness",
+                    "subtitle": "How strong the effect of vibrancy is on dark areas.",
+                    "keyword": "decoration:blur:vibrancy_darkness",
+                    "lower": 0,
+                    "upper": 10,
+                    "step": 1,
+                    "default": 0
+                },
+                {
+                    "type": "SwitchRow",
+                    "title": "Blur Popups",
+                    "subtitle": "Whether to blur popups (e.g. right-click menus)",
+                    "keyword": "decoration:blur:popups",
+                    "default": false
+                },
+                {
+                    "type": "SpinRowFloat",
+                    "title": "Blur Popups Ignorealpha",
+                    "subtitle": "Works like ignorealpha in layer rules. If pixel opacity is below set value, will not blur.",
+                    "keyword": "decoration:blur:popups_ignorealpha",
+                    "lower": 0,
+                    "upper": 10,
+                    "step": 1,
+                    "default": 2
+                }        
             ]
         },
         {
@@ -254,6 +365,27 @@
                     "default": true
                 }
 
+            ]
+        },
+        {
+            "title": "Colors (only for testing)",
+            "description": "Colors can't be restored after restarting Hyprland.",
+            "page": "settings_page",
+            "rows": [
+                {
+                    "type": "ColorRow",
+                    "title": "Active Border Color",
+                    "subtitle": "Define the border color for the active window",
+                    "keyword": "general:col.active_border",
+                    "default": false
+                },
+                {
+                    "type": "ColorRow",
+                    "title": "Inactive Border Color",
+                    "subtitle": "Define the border color for the inactive window",
+                    "keyword": "general:col.inactive_border",
+                    "default": false
+                }
             ]
         }
     ]
