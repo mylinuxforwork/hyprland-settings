@@ -1,0 +1,22 @@
+[
+    {
+        "key":"waybar_bluetooth",
+        "value": true
+    },
+    {
+        "key":"waybar_network",
+        "value": true
+    },
+    {
+        "key":"waybar_chatgpt",
+        "value": true
+    },
+    {
+        "key":"waybar_systray",
+        "value": true
+    },
+    {
+        "key":"waybar_screenlock",
+        "value": true
+    }
+]

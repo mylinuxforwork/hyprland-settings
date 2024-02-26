@@ -52,6 +52,8 @@ class MyApp(Adw.Application):
     path_name = pathname # Path of Application
     homeFolder = os.path.expanduser('~') # Path to home folder
     dotfiles = homeFolder + "/dotfiles/"
+    block_reload = True
+    settings = {}
 
     waybar_themes = [
         "ml4w-minimal",
@@ -73,29 +75,80 @@ class MyApp(Adw.Application):
         if not win:
             win = MainWindow(application=self)
 
+        # Load settings
+        if not os.path.exists(self.dotfiles + ".settings/settings.json"):
+            shutil.copy(self.path_name + '/settings.json', self.dotfiles + ".settings/")
+        settings_file = open(self.dotfiles + ".settings/settings.json")
+        settings_arr = json.load(settings_file)
+        for row in settings_arr:
+            self.settings[row["key"]] = row["value"]
+
         self.waybar_show_bluetooth = win.waybar_show_bluetooth
         self.waybar_show_network = win.waybar_show_network
         self.waybar_show_chatgpt = win.waybar_show_chatgpt
         self.waybar_show_systray = win.waybar_show_systray
         self.waybar_show_screenlock = win.waybar_show_screenlock
-
-        if self.searchInFile("waybar/themes/ml4w-minimal/config",'// "bluetooth"'):
-            self.waybar_show_bluetooth.set_active(False)
-        else:
+        
+        # Bluetooth
+        if self.settings["waybar_bluetooth"]:
             self.waybar_show_bluetooth.set_active(True)
+        else:
+            self.waybar_show_bluetooth.set_active(False)
+
+        '''
+        # Network
+        if self.settings["waybar_network"]:
+            self.waybar_show_network.set_active(False)
+        else:
+            self.waybar_show_network.set_active(True)
+
+        # ChatGPT
+        if self.settings["waybar_chatgpt"]:
+            self.waybar_show_chatgpt.set_active(False)
+        else:
+            self.waybar_show_chatgpt.set_active(True)
+
+        # Systray
+        if self.settings["waybar_systray"]:
+            self.waybar_show_systray.set_active(False)
+        else:
+            self.waybar_show_systray.set_active(True)
+
+        # Systray
+        if self.settings["waybar_screenlock"]:
+            self.waybar_show_idle_inhibitor.set_active(False)
+        else:
+            self.waybar_show_idle_inhibitor.set_active(True)
+        '''
+
+        self.block_reload = False
 
         # Show Application Window
         win.present()
         print (":: Welcome to ML4W Dotfiles Settings App")
 
     def on_waybar_show_bluetooth(self, widget, _):
-        if self.waybar_show_bluetooth.get_active():
-            for t in self.waybar_themes:
-                self.replaceInFile("waybar/themes/" + t + "/config",'// "bluetooth",','"bluetooth",')
-        else:
-            for t in self.waybar_themes:
-                self.replaceInFile("waybar/themes/" + t + "/config",'"bluetooth",','// "bluetooth",')
-        self.reloadWaybar()
+        if not self.block_reload:
+            if self.waybar_show_bluetooth.get_active():
+                for t in self.waybar_themes:
+                    self.replaceInFile("waybar/themes/" + t + "/config",'"bluetooth"','"bluetooth",')
+                self.updateSettings("waybar_bluetooth", True)
+            else:
+                for t in self.waybar_themes:
+                    self.replaceInFile("waybar/themes/" + t + "/config",'"bluetooth"','//"bluetooth",')
+                self.updateSettings("waybar_bluetooth", False)
+            self.reloadWaybar()
+
+    def updateSettings(self,keyword,value):
+        result = []
+        self.settings[keyword] = value
+        for k, v in self.settings.items():
+            result.append({'key': k, 'value': v})
+        self.writeToSettings(result)
+
+    def writeToSettings(self,result):
+        with open(self.dotfiles + '.settings/settings.json', 'w', encoding='utf-8') as f:
+            json.dump(result, f, ensure_ascii=False, indent=4)
 
     def searchInFile(self, f, search):
         with open(self.dotfiles + f, 'r') as file:
@@ -107,11 +160,20 @@ class MyApp(Adw.Application):
 
     # Replace Text in File
     def replaceInFile(self, f, search, replace):
-        with open(self.dotfiles + f, 'r') as file:
-            filedata = file.read()
-        filedata = filedata.replace(search, replace)
-        with open(self.dotfiles + f, 'w') as file:
-            file.write(filedata)
+        file = open(self.dotfiles + f, 'r')
+        lines = file.readlines()
+        count = 0
+        found = 0
+        # Strips the newline character
+        for l in lines:
+            count += 1
+            if search in l:
+                found = count
+                print("Found in " + str(found))
+        if found > 0:
+            lines[found - 1] = replace + "\n"
+            with open(self.dotfiles + f, 'w') as file:
+                file.writelines(lines)
 
     # Reload Waybar
     def reloadWaybar(self):
