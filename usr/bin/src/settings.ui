@@ -16,13 +16,6 @@
             <property name="description" translatable="true">Change the color-scheme of the application.</property>
 
             <child>
-              <object class="AdwSwitchRow" id="waybar_show_bluetooth">
-                <property name="title" translatable="true">Show Bluetooth Module</property>
-                <property name="action-name">app.waybar_show_bluetooth</property>
-              </object>
-            </child>
-
-            <child>
               <object class="AdwSwitchRow" id="waybar_show_screenlock">
                 <property name="title" translatable="true">Show Screen Lock Module</property>
                 <property name="action-name">app.waybar_show_screenlock</property>
@@ -51,7 +44,7 @@
             </child>
 
             <child>
-              <object class="AdwSpinRow">
+              <object class="AdwSpinRow" id="waybar_workspaces">
                 <property name="title" translatable="true">Workspaces</property>
                 <property name="adjustment">
                   <object class="GtkAdjustment">
@@ -73,8 +66,9 @@
             <property name="description" translatable="true">Define properties for the Rofi Launcher.</property>
 
             <child>
-              <object class="AdwSpinRow">
+              <object class="AdwSpinRow" id="rofi_bordersize">
                 <property name="title" translatable="true">Rofi Border Size</property>
+                <property name="action-name">app.rofi_bordersize</property>
                 <property name="adjustment">
                   <object class="GtkAdjustment">
                     <property name="lower">1</property>

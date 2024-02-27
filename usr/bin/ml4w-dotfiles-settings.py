@@ -34,11 +34,11 @@ pathname = os.path.dirname(sys.argv[0])
 # -----------------------------------------
 class MainWindow(Adw.PreferencesWindow):
     __gtype_name__ = 'Ml4wSettingsWindow'
-    waybar_show_bluetooth = Gtk.Template.Child()
     waybar_show_network = Gtk.Template.Child()
     waybar_show_chatgpt = Gtk.Template.Child()
     waybar_show_systray = Gtk.Template.Child()
     waybar_show_screenlock = Gtk.Template.Child()
+    rofi_bordersize = Gtk.Template.Child()
 
     # Get objects from template
     def __init__(self, *args, **kwargs):
@@ -67,7 +67,11 @@ class MyApp(Adw.Application):
         super().__init__(application_id='com.ml4w.dotfilessettings',
                          flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
-        self.create_action('waybar_show_bluetooth', self.on_waybar_show_bluetooth)
+        self.create_action('waybar_show_network', self.on_waybar_show_network)
+        self.create_action('waybar_show_screenlock', self.on_waybar_show_screenlock)
+        self.create_action('waybar_show_chatgpt', self.on_waybar_show_chatgpt)
+        self.create_action('waybar_show_systray', self.on_waybar_show_systray)
+        self.create_action('rofi_bordersize', self.on_rofi_bordersize)
 
     def do_activate(self):
         # Define main window
@@ -83,43 +87,39 @@ class MyApp(Adw.Application):
         for row in settings_arr:
             self.settings[row["key"]] = row["value"]
 
-        self.waybar_show_bluetooth = win.waybar_show_bluetooth
         self.waybar_show_network = win.waybar_show_network
         self.waybar_show_chatgpt = win.waybar_show_chatgpt
         self.waybar_show_systray = win.waybar_show_systray
         self.waybar_show_screenlock = win.waybar_show_screenlock
-        
-        # Bluetooth
-        if self.settings["waybar_bluetooth"]:
-            self.waybar_show_bluetooth.set_active(True)
-        else:
-            self.waybar_show_bluetooth.set_active(False)
+        self.rofi_bordersize = win.rofi_bordersize
 
-        '''
+        self.rofi_bordersize.get_adjustment().connect("value-changed", self.on_rofi_bordersize)
+        
+        print(self.settings)
+
         # Network
         if self.settings["waybar_network"]:
-            self.waybar_show_network.set_active(False)
-        else:
             self.waybar_show_network.set_active(True)
+        else:
+            self.waybar_show_network.set_active(False)
 
         # ChatGPT
         if self.settings["waybar_chatgpt"]:
-            self.waybar_show_chatgpt.set_active(False)
-        else:
             self.waybar_show_chatgpt.set_active(True)
+        else:
+            self.waybar_show_chatgpt.set_active(False)
 
         # Systray
         if self.settings["waybar_systray"]:
-            self.waybar_show_systray.set_active(False)
-        else:
             self.waybar_show_systray.set_active(True)
-
-        # Systray
-        if self.settings["waybar_screenlock"]:
-            self.waybar_show_idle_inhibitor.set_active(False)
         else:
-            self.waybar_show_idle_inhibitor.set_active(True)
-        '''
+            self.waybar_show_systray.set_active(False)
+
+        # Screenlock
+        if self.settings["waybar_screenlock"]:
+            self.waybar_show_screenlock.set_active(True)
+        else:
+            self.waybar_show_screenlock.set_active(False)
 
         self.block_reload = False
 
@@ -127,16 +127,54 @@ class MyApp(Adw.Application):
         win.present()
         print (":: Welcome to ML4W Dotfiles Settings App")
 
-    def on_waybar_show_bluetooth(self, widget, _):
+    def on_rofi_bordersize(self, widget):
+        print(widget.get_value())
+
+    def on_waybar_show_network(self, widget, _):
         if not self.block_reload:
-            if self.waybar_show_bluetooth.get_active():
+            if self.waybar_show_network.get_active():
                 for t in self.waybar_themes:
-                    self.replaceInFile("waybar/themes/" + t + "/config",'"bluetooth"','"bluetooth",')
-                self.updateSettings("waybar_bluetooth", True)
+                    self.replaceInFile("waybar/themes/" + t + "/config",'"network"','"network",')
+                self.updateSettings("waybar_network", True)
             else:
                 for t in self.waybar_themes:
-                    self.replaceInFile("waybar/themes/" + t + "/config",'"bluetooth"','//"bluetooth",')
-                self.updateSettings("waybar_bluetooth", False)
+                    self.replaceInFile("waybar/themes/" + t + "/config",'"network"','//"network",')
+                self.updateSettings("waybar_network", False)
+            self.reloadWaybar()
+
+    def on_waybar_show_systray(self, widget, _):
+        if not self.block_reload:
+            if self.waybar_show_systray.get_active():
+                for t in self.waybar_themes:
+                    self.replaceInFile("waybar/themes/" + t + "/config",'"tray"','"tray",')
+                self.updateSettings("waybar_systray", True)
+            else:
+                for t in self.waybar_themes:
+                    self.replaceInFile("waybar/themes/" + t + "/config",'"tray"','//"tray",')
+                self.updateSettings("waybar_systray", False)
+            self.reloadWaybar()
+
+
+    def on_waybar_show_screenlock(self, widget, _):
+        if not self.block_reload:
+            if self.waybar_show_screenlock.get_active():
+                for t in self.waybar_themes:
+                    self.replaceInFile("waybar/themes/" + t + "/config",'"idle_inhibitor"','"idle_inhibitor",')
+                self.updateSettings("waybar_screenlock", True)
+            else:
+                for t in self.waybar_themes:
+                    self.replaceInFile("waybar/themes/" + t + "/config",'"idle_inhibitor"','//"idle_inhibitor",')
+                self.updateSettings("waybar_screenlock", False)
+            self.reloadWaybar()
+
+    def on_waybar_show_chatgpt(self, widget, _):
+        if not self.block_reload:
+            if self.waybar_show_chatgpt.get_active():
+                self.replaceInFile("waybar/modules.json",'"custom/chatgpt"','"custom/chatgpt",')
+                self.updateSettings("waybar_chatgpt", True)
+            else:
+                self.replaceInFile("waybar/modules.json",'"custom/chatgpt"','//"custom/chatgpt",')
+                self.updateSettings("waybar_chatgpt", False)
             self.reloadWaybar()
 
     def updateSettings(self,keyword,value):
@@ -172,6 +210,23 @@ class MyApp(Adw.Application):
                 print("Found in " + str(found))
         if found > 0:
             lines[found - 1] = replace + "\n"
+            with open(self.dotfiles + f, 'w') as file:
+                file.writelines(lines)
+
+    # Replace Text in File
+    def replaceInFileNext(self, f, search, replace):
+        file = open(self.dotfiles + f, 'r')
+        lines = file.readlines()
+        count = 0
+        found = 0
+        # Strips the newline character
+        for l in lines:
+            count += 1
+            if search in l:
+                found = count
+                print("Found in " + str(found))
+        if found > 0:
+            lines[found] = replace + "\n"
             with open(self.dotfiles + f, 'w') as file:
                 file.writelines(lines)
 
