@@ -5,198 +5,23 @@
   <template class="Ml4wSettingsWindow" parent="AdwPreferencesWindow">
     <property name="default-width">800</property>
     <property name="default-height">600</property>
-    <property name="title">ML4W Dotfiles Settings</property>
+    <property name="title">Hyprland Settings</property>
     <child>
       <object class="AdwPreferencesPage" id="settings_page">
-        <property name="title">ML4W Dotfiles Settings</property>
+        <property name="title">Hyprland Settings</property>
         <property name="icon-name">settings-symbolic</property>
+      </object>
+    </child>
+    <child>
+      <object class="AdwPreferencesPage" id="options_page">
+        <property name="title">Set Variables</property>
+        <property name="icon-name">open-menu-symbolic</property>
         <child>
-          <object class="AdwPreferencesGroup">
-            <property name="title" translatable="true">Waybar Settings</property>
-            <property name="description" translatable="true">Change the color-scheme of the application.</property>
-
-            <child>
-              <object class="AdwSwitchRow" id="waybar_show_screenlock">
-                <property name="title" translatable="true">Show Screen Lock Module</property>
-                <property name="action-name">app.waybar_show_screenlock</property>
-              </object>
-            </child>
-
-            <child>
-              <object class="AdwSwitchRow" id="waybar_show_chatgpt">
-                <property name="title" translatable="true">Show ChatGPT Module</property>
-                <property name="action-name">app.waybar_show_chatgpt</property>
-              </object>
-            </child>
-
-            <child>
-              <object class="AdwSwitchRow" id="waybar_show_network">
-                <property name="title" translatable="true">Show Network Module</property>
-                <property name="action-name">app.waybar_show_network</property>
-              </object>
-            </child>
-
-            <child>
-              <object class="AdwSwitchRow" id="waybar_show_systray">
-                <property name="title" translatable="true">Show Systray Module</property>
-                <property name="action-name">app.waybar_show_systray</property>
-              </object>
-            </child>
-
-            <child>
-              <object class="AdwSpinRow" id="waybar_workspaces">
-                <property name="title" translatable="true">Workspaces</property>
-                <property name="adjustment">
-                  <object class="GtkAdjustment">
-                    <property name="lower">5</property>
-                    <property name="upper">10</property>
-                    <property name="step-increment">1</property>
-                    <property name="value">5</property>
-                  </object>
-                </property>
-              </object>
-            </child>
-
+          <object class="AdwPreferencesGroup" id="keywords_group">
+            <property name="title">Used Variables</property>
+            <property name="description">This list shows all variables overwritten by the settings app. Remove an entry to restore keyword from hyprland.conf.</property>
           </object>
         </child>
-
-        <child>
-          <object class="AdwPreferencesGroup">
-            <property name="title" translatable="true">Rofi</property>
-            <property name="description" translatable="true">Define properties for the Rofi Launcher.</property>
-
-            <child>
-              <object class="AdwSpinRow" id="rofi_bordersize">
-                <property name="title" translatable="true">Rofi Border Size</property>
-                <property name="action-name">app.rofi_bordersize</property>
-                <property name="adjustment">
-                  <object class="GtkAdjustment">
-                    <property name="lower">1</property>
-                    <property name="upper">10</property>
-                    <property name="step-increment">1</property>
-                    <property name="value">3</property>
-                  </object>
-                </property>
-              </object>
-            </child>
-
-          </object>
-        </child>
-
-        <child>
-          <object class="AdwPreferencesGroup">
-            <property name="title" translatable="true">Configuration Variations</property>
-            <property name="description" translatable="true">Choose from the available variations of your Hyprland configuration.</property>
-
-            <child>
-              <object class="AdwActionRow">
-                <property name="title" translatable="true">Animations</property>
-                <child type="suffix">
-                  <object class="GtkDropDown" id="dd_animations">
-                    <property name="enable-search">true</property>
-                    <property name="halign">3</property>
-                    <property name="valign">3</property>
-                    <property name="model">
-                      <object class="GtkStringList">
-                        <items>
-                          <item>Grapes</item>
-                          <item>Apples</item>
-                          <item>Bananas</item>
-                          <item>Tomatoes</item>
-                        </items>
-                      </object>
-                    </property>
-                  </object>
-                </child>
-              </object>
-            </child>
-
-            <child>
-              <object class="AdwActionRow">
-                <property name="title" translatable="true">Environments</property>
-                <child type="suffix">
-                  <object class="GtkDropDown" id="dd_environments">
-                    <property name="enable-search">true</property>
-                    <property name="halign">3</property>
-                    <property name="valign">3</property>
-                    <property name="model">
-                      <object class="GtkStringList">
-                        <items>
-                          <item>Grapes</item>
-                          <item>Apples</item>
-                          <item>Bananas</item>
-                          <item>Tomatoes</item>
-                        </items>
-                      </object>
-                    </property>
-                  </object>
-                </child>
-              </object>
-            </child>
-
-            <child>
-              <object class="AdwActionRow">
-                <property name="title" translatable="true">Monitors</property>
-                <child type="suffix">
-                  <object class="GtkDropDown" id="dd_monitors">
-                    <property name="enable-search">true</property>
-                    <property name="halign">3</property>
-                    <property name="valign">3</property>
-                    <property name="model">
-                      <object class="GtkStringList">
-                        <items>
-                          <item>Grapes</item>
-                          <item>Apples</item>
-                          <item>Bananas</item>
-                          <item>Tomatoes</item>
-                        </items>
-                      </object>
-                    </property>
-                  </object>
-                </child>
-              </object>
-            </child>
-
-          </object>
-        </child>
-        <child>
-          <object class="AdwPreferencesGroup">
-            <property name="title" translatable="true">Waybar Default Applications</property>
-            <property name="description" translatable="true">Choose the default applications for Waybar.</property>
-
-            <child>
-              <object class="AdwEntryRow">
-                <property name="title" translatable="true">Browser</property>
-              </object>
-            </child>
-
-            <child>
-              <object class="AdwEntryRow">
-                <property name="title" translatable="true">File Manager</property>
-              </object>
-            </child>
-
-            <child>
-              <object class="AdwEntryRow">
-                <property name="title" translatable="true">Network Manager</property>
-              </object>
-            </child>
-
-            <child>
-              <object class="AdwEntryRow">
-                <property name="title" translatable="true">Software</property>
-              </object>
-            </child>
-
-            <child>
-              <object class="AdwEntryRow">
-                <property name="title" translatable="true">Terminal</property>
-              </object>
-            </child>
-
-          </object>
-        </child>
-
       </object>
     </child>
   </template>
