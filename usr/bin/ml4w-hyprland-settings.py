@@ -13,11 +13,12 @@ import threading
 import json
 import pathlib
 import shutil
+import time
 
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 
-from gi.repository import Gtk, Adw, Gio
+from gi.repository import Gtk, Adw, Gio, Gdk
 from gi.repository import GLib
 from gi.repository import GObject
 
@@ -244,13 +245,21 @@ class MyApp(Adw.Application):
             self.updateHyprctl(data[1]["keyword"],widget.get_active())
         self.keyword_blocked = False            
 
-    #SwitchRow
+    #ColorRow
     def createColorRow(self,pref,row,value):
         colorRow = Adw.ActionRow()
         colorRow.set_title(row["title"])
         colorRow.set_subtitle(row["subtitle"])
         color = Gtk.ColorDialogButton()
         color.set_valign(3)
+
+        color_rgba = Gdk.RGBA()
+        if "rgb" in value:
+            color_rgba.parse("#" + value.split("(")[1].split(")")[0])
+        else:
+            color_rgba.parse("#" + value[2:])
+
+        color.set_rgba(color_rgba)
         color_dialog = Gtk.ColorDialog()
         color.connect("notify::rgba",self.on_color_select, row)
         color.set_dialog(color_dialog)
@@ -267,24 +276,26 @@ class MyApp(Adw.Application):
         return f'{r:02x}{g:02x}{b:02x}'        
 
     def rgba_to_hex(self, rgba):
-        print(rgba)
         r = int(rgba[0])
         g = int(rgba[1])
         b = int(rgba[2])
         a = int(float(rgba[3]) * 255)
-        return f'{a:02x}{r:02x}{g:02x}{b:02x}'        
+        # return f'{r:02x}{g:02x}{b:02x}{a:02x}'        
+        return f'{r:02x}{g:02x}{b:02x}'        
 
     def on_color_select(self,widget,*data):
         rgbaStr = widget.get_rgba().to_string()
+
         if "rgba" in rgbaStr:
             rgbaStr = rgbaStr.replace("rgba(", "")
             rgbaStr = rgbaStr.replace(")", "")
-            rgba_hex = "rgba(" + self.rgba_to_hex(rgbaStr.split(",")) + ")"
+            rgba_hex = "rgb(" + self.rgba_to_hex(rgbaStr.split(",")) + ")"
         else:
             rgbaStr = rgbaStr.replace("rgb(", "")
             rgbaStr = rgbaStr.replace(")", "")
             rgba_hex = "rgb(" + self.rgb_to_hex(rgbaStr.split(",")) + ")"
-
+        
+        self.updateHyprctl(data[1]["keyword"],rgba_hex)
         subprocess.Popen(["hyprctl", "keyword", data[1]["keyword"], rgba_hex])
 
     # Update and write hyprctl.json
@@ -314,18 +325,20 @@ class MyApp(Adw.Application):
     def getKeywordValue(self,keyword):
         result = subprocess.run("hyprctl getoption " + keyword, shell=True, capture_output=True, text=True)
         outcome = result.stdout
-        int_out = outcome.split("\n")[1]
-        float_out = outcome.split("\n")[2]
-        data_out = outcome.split("\n")[4]
-        int_val = int_out.split("int: ")[1]
-        float_val = float_out.split("float: ")[1]
-        data_val = data_out.split("data: ")[1]
-
+        out_arr = outcome.split("\n")
+        value = outcome.split("\n")[0]
+        if "int" in value:
+            int_val = value.split("int: ")[1]
+        if "float" in value:
+            float_val = value.split("float: ")[1]
+        if "custom type" in value:
+            custom_val = value.split("custom type: ")[1]
+            int_val = custom_val.split(" ")[0]
         if (self.rowtype[keyword] == "SpinRowFloat"):
             value = int(float(float_val)*10)
         elif (self.rowtype[keyword] == "ColorRow"):
-            print(data_val)
-            value = data_val
+            colorhex = custom_val.split(" ")[0]
+            value = colorhex
         elif (self.rowtype[keyword] == "SwitchRow"):
             if int_val == "1":
                 value = True
@@ -333,7 +346,6 @@ class MyApp(Adw.Application):
                 value = False
         else:
             value = int(int_val)
-
         return value
 
     # File setup

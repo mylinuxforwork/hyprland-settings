@@ -6,6 +6,18 @@
             "page": "settings_page",
             "rows": [
                 {
+                    "type": "ColorRow",
+                    "title": "Active Border Color",
+                    "subtitle": "Define the window border size in pixels",
+                    "keyword": "general:col.active_border"
+                },
+                {
+                    "type": "ColorRow",
+                    "title": "Inactive Border Color",
+                    "subtitle": "Define the window border size in pixels",
+                    "keyword": "general:col.inactive_border"
+                },
+                {
                     "type": "SpinRow",
                     "title": "Border Size",
                     "subtitle": "Define the window border size in pixels",
@@ -365,27 +377,6 @@
                     "default": true
                 }
 
-            ]
-        },
-        {
-            "title": "Colors (only for testing)",
-            "description": "Colors can't be restored after restarting Hyprland.",
-            "page": "settings_page",
-            "rows": [
-                {
-                    "type": "ColorRow",
-                    "title": "Active Border Color",
-                    "subtitle": "Define the border color for the active window",
-                    "keyword": "general:col.active_border",
-                    "default": false
-                },
-                {
-                    "type": "ColorRow",
-                    "title": "Inactive Border Color",
-                    "subtitle": "Define the border color for the inactive window",
-                    "keyword": "general:col.inactive_border",
-                    "default": false
-                }
             ]
         }
     ]
