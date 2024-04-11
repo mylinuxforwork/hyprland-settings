@@ -51,9 +51,7 @@ class MyApp(Adw.Application):
     path_name = pathname # Path of Application
     homeFolder = os.path.expanduser('~') # Path to home folder
     configFolderName = "ml4w-hyprland-settings" # config folder name
-    dotfiles = homeFolder + "/dotfiles/" # dotfiles folder name
     configFolder = homeFolder + "/.config/" + configFolderName # Config folder name
-    dotfilesFolder = dotfiles + configFolderName # dotfiles folder
     settingsFolder = "" # Settingsfolder
     hyprctlFile = "" # hyprctl.conf
     hyprctl = {} # hyprctl dictionary synced with hyprctlfile
@@ -91,7 +89,7 @@ class MyApp(Adw.Application):
 
         if (self.init_hyprctl):
             value = "true"
-            print("Execute: hyprctl.sh")
+            print(":: Execute: " + self.settingsFolder + "hyprctl.sh")
             subprocess.Popen(self.settingsFolder + "/hyprctl.sh")
 
         # Show Application Window
@@ -350,18 +348,16 @@ class MyApp(Adw.Application):
 
     # File setup
     def runSetup(self):
-        if os.path.exists(self.dotfiles):
-            pathlib.Path(self.dotfilesFolder).mkdir(parents=True, exist_ok=True) 
-            self.settingsFolder = self.dotfilesFolder
-        else:
-            pathlib.Path(self.configFolder).mkdir(parents=True, exist_ok=True) 
-            self.settingsFolder = self.configFolder
+        # Create ml4w-hyprland-settings in .config folder
+        pathlib.Path(self.configFolder).mkdir(parents=True, exist_ok=True) 
+        self.settingsFolder = self.configFolder
         print(":: Using configuration in: " + self.settingsFolder)
-        
-        if not os.path.exists(self.settingsFolder + '/hyprctl.sh'):
-            print(":: hyprctl.sh created in " + self.settingsFolder)
-        shutil.copy(self.path_name + '/hyprctl.sh', self.settingsFolder)
 
+        #Update hyprctl.sh in settingsFolder        
+        shutil.copy(self.path_name + '/hyprctl.sh', self.settingsFolder)
+        print(":: hyprctl.sh updated in " + self.settingsFolder)
+
+        # Create empty hyprctl.json if not exists
         if not os.path.exists(self.settingsFolder + '/hyprctl.json'):
             shutil.copy(self.path_name + '/hyprctl.json', self.settingsFolder)
             print(":: hyprctl.json created in " + self.settingsFolder)
