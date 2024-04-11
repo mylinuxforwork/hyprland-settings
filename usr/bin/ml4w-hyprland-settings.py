@@ -359,8 +359,8 @@ class MyApp(Adw.Application):
         print(":: Using configuration in: " + self.settingsFolder)
         
         if not os.path.exists(self.settingsFolder + '/hyprctl.sh'):
-            shutil.copy(self.path_name + '/hyprctl.sh', self.settingsFolder)
             print(":: hyprctl.sh created in " + self.settingsFolder)
+        shutil.copy(self.path_name + '/hyprctl.sh', self.settingsFolder)
 
         if not os.path.exists(self.settingsFolder + '/hyprctl.json'):
             shutil.copy(self.path_name + '/hyprctl.json', self.settingsFolder)

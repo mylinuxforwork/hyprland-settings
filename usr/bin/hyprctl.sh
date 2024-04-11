@@ -7,7 +7,7 @@
 #        |___/|_|                   
 # 
 # Execute this file in the hyprland.conf with exec-always
-
+sleep 3
 script=$(readlink -f $0)
 path=$(dirname $script)
 if [ ! -f $path/hyprctl.json ] ;then
