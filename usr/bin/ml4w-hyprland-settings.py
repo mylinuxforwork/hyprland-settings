@@ -168,11 +168,29 @@ class MyApp(Adw.Application):
         
     def remove_keyword(self, widget,v):
         subprocess.Popen(["hyprctl", "reload"])
+        print(":: Hyprctl Reload")
+        # time.sleep(1)
         self.removeHyptctl(v)
         self.keywords_group.remove(self.action_rows[v])
         self.action_rows.pop(v)
         self.keyword_blocked = True
-        self.pref_rows[v].set_value(self.getKeywordValue(v))
+        value = self.getKeywordValue(v)
+        if self.rowtype[v] == "SpinRow":
+            self.pref_rows[v].set_value(int(value))        
+        if self.rowtype[v] == "SpinRowFloat":
+            self.pref_rows[v].set_value(int(value)*10)        
+        if self.rowtype[v] == "SwitchRow":
+            self.pref_rows[v].set_active(value)
+        if self.rowtype[v] == "ColorRow":
+            color_rgba = Gdk.RGBA()
+            if "rgb" in value:
+                color_rgba.parse("#" + value.split("(")[1].split(")")[0])
+            else:
+                color_rgba.parse("#" + value[2:])
+            self.pref_rows[v].set_rgba(color_rgba)
+        
+        print(":: Execute: " + self.settingsFolder + "/hyprctl.sh")
+        subprocess.Popen(self.settingsFolder + "/hyprctl.sh")
 
     # SpinRow
     def createSpinRow(self,pref,row,value):
@@ -263,9 +281,8 @@ class MyApp(Adw.Application):
         color.set_dialog(color_dialog)
         colorRow.add_suffix(color)
 
-        # switchRow.set_active(value)
         pref.add(colorRow)
-        # self.pref_rows[row["keyword"]] = switchRow
+        self.pref_rows[row["keyword"]] = color
 
     def rgb_to_hex(self, rgb):
         r = int(rgb[0])
@@ -282,19 +299,23 @@ class MyApp(Adw.Application):
         return f'{r:02x}{g:02x}{b:02x}'        
 
     def on_color_select(self,widget,*data):
-        rgbaStr = widget.get_rgba().to_string()
+        if not self.keyword_blocked:
+            rgbaStr = widget.get_rgba().to_string()
 
-        if "rgba" in rgbaStr:
-            rgbaStr = rgbaStr.replace("rgba(", "")
-            rgbaStr = rgbaStr.replace(")", "")
-            rgba_hex = "rgb(" + self.rgba_to_hex(rgbaStr.split(",")) + ")"
-        else:
-            rgbaStr = rgbaStr.replace("rgb(", "")
-            rgbaStr = rgbaStr.replace(")", "")
-            rgba_hex = "rgb(" + self.rgb_to_hex(rgbaStr.split(",")) + ")"
-        
-        self.updateHyprctl(data[1]["keyword"],rgba_hex)
-        subprocess.Popen(["hyprctl", "keyword", data[1]["keyword"], rgba_hex])
+            if "rgba" in rgbaStr:
+                rgbaStr = rgbaStr.replace("rgba(", "")
+                rgbaStr = rgbaStr.replace(")", "")
+                rgba_hex = "rgb(" + self.rgba_to_hex(rgbaStr.split(",")) + ")"
+            else:
+                rgbaStr = rgbaStr.replace("rgb(", "")
+                rgbaStr = rgbaStr.replace(")", "")
+                rgba_hex = "rgb(" + self.rgb_to_hex(rgbaStr.split(",")) + ")"
+            
+            self.updateHyprctl(data[1]["keyword"],rgba_hex)
+            if data[1]["keyword"] not in self.hyprctl:
+                self.createActionRow(data[1]["keyword"])
+            subprocess.Popen(["hyprctl", "keyword", data[1]["keyword"], rgba_hex])
+        self.keyword_blocked = False
 
     # Update and write hyprctl.json
     def removeHyptctl(self,keyword):
