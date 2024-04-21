@@ -1,10 +1,11 @@
-#  __  __ _    _  ___        __  ____       _   _   _                 
-# |  \/  | |  | || \ \      / / / ___|  ___| |_| |_(_)_ __   __ _ ___ 
-# | |\/| | |  | || |\ \ /\ / /  \___ \ / _ \ __| __| | '_ \ / _` / __|
-# | |  | | |__|__   _\ V  V /    ___) |  __/ |_| |_| | | | | (_| \__ \
-# |_|  |_|_____| |_|  \_/\_/    |____/ \___|\__|\__|_|_| |_|\__, |___/
-#                                                           |___/     
-                                                             
+#  _   _                  _                 _ 
+# | | | |_   _ _ __  _ __| | __ _ _ __   __| |
+# | |_| | | | | '_ \| '__| |/ _` | '_ \ / _` |
+# |  _  | |_| | |_) | |  | | (_| | | | | (_| |
+# |_| |_|\__, | .__/|_|  |_|\__,_|_| |_|\__,_|
+#        |___/|_|                             
+#
+                                                            
 import sys
 import gi
 import subprocess
@@ -311,9 +312,9 @@ class MyApp(Adw.Application):
                 rgbaStr = rgbaStr.replace(")", "")
                 rgba_hex = "rgb(" + self.rgb_to_hex(rgbaStr.split(",")) + ")"
             
-            self.updateHyprctl(data[1]["keyword"],rgba_hex)
             if data[1]["keyword"] not in self.hyprctl:
                 self.createActionRow(data[1]["keyword"])
+            self.updateHyprctl(data[1]["keyword"],rgba_hex)
             subprocess.Popen(["hyprctl", "keyword", data[1]["keyword"], rgba_hex])
         self.keyword_blocked = False
 
