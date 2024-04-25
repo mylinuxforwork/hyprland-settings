@@ -4,7 +4,7 @@ mkdir ~/tmp
 cp -r . ~/tmp
 rm -rf ~/tmp/.git
 rm -rf ~/tmp/release
-rm -rf ~/tmp/screenshot
+rm -rf ~/tmp/screenshots
 rm ~/tmp/.gitignore
 rm ~/tmp/build.sh
 rm ~/tmp/install.sh
