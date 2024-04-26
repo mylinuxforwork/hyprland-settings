@@ -24,5 +24,43 @@
         </child>
       </object>
     </child>
+    <child>
+      <object class="AdwPreferencesPage" id="about_page">
+        <property name="title">About</property>
+        <property name="icon-name">help-about-symbolic</property>
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">1</property>
+            <property name="halign">5</property>
+            <property name="margin-top">100</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="true">ML4W Hyprland Settings App</property>
+                <style>
+                  <class name="title-1"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="button">
+                <property name="label" translatable="true">About</property>
+                <property name="halign">3</property>                
+                <property name="margin-top">30</property>
+                <property name="action-name">app.about</property>
+                <style>
+                  <class name="pill"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLinkButton">
+                <property name="label" translatable="true">GitLab Repository</property>
+                <property name="uri">https://gitlab.com/stephan-raabe/ml4w-hyprland-settings</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>    
   </template>
 </interface>

@@ -65,6 +65,7 @@ class MyApp(Adw.Application):
         super().__init__(application_id='com.ml4w.hyprlandsettings',
                          flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
+        self.create_action('about', self.on_about)
 
     def do_activate(self):
         # Setup Configuration      
@@ -396,6 +397,21 @@ class MyApp(Adw.Application):
         app = win.get_application()
         sm = app.get_style_manager()
         sm.set_color_scheme(Adw.ColorScheme.PREFER_DARK)
+
+    def on_about(self, widget, _):
+        
+        dialog = Adw.AboutWindow(
+            application_icon="application-x-executable",
+            application_name="ML4W Hyprland Settings App",
+            developer_name="Stephan Raabe",
+            version="1.0",
+            website="https://gitlab.com/stephan-raabe/ml4w-hyprland-settings",
+            issue_url="https://gitlab.com/stephan-raabe/ml4w-hyprland-settings/-/issues",
+            support_url="https://gitlab.com/stephan-raabe/ml4w-hyprland-settings/-/issues",
+            copyright="© 2024 Stephan Raabe",
+            license_type=Gtk.License.GPL_3_0_ONLY
+        )
+        dialog.present()
 
 # Application Start
 app = MyApp()
