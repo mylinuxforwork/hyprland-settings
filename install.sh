@@ -120,4 +120,8 @@ cp release/ML4W_Hyprland_Settings-x86_64.AppImage ~/apps
 cp icon.png ~/apps/ml4w-hyprland-settings.png
 cp ml4w-hyprland-settings.desktop ~/.local/share/applications
 echo 
-echo "DONE! You can start the app from your application launcher or with the terminal from the folder apps."
+echo "DONE!" 
+echo "Please add the following command to your hyprland.conf of you want to restore the changes after logging in."
+echo "exec-once = ~/.config/ml4w-hyprland-settings/hyprctl.sh"
+echo 
+echo "You can start the app from your application launcher or with the terminal from the folder apps."
