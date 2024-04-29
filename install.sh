@@ -106,10 +106,12 @@ APPIMAGE="$HOME/apps/ML4W_Hyprland_Settings-x86_64.AppImage"
 ICON="$HOME/.local/share/applications/ml4w-hyprland-settings.png"
 sed -i "s|HOME|${APPIMAGE}|g" $HOME/.local/share/applications/ml4w-hyprland-settings.desktop
 sed -i "s|icon|${ICON}|g" $HOME/.local/share/applications/ml4w-hyprland-settings.desktop
+echo ":: Desktop file and icon installed successfully in ~/.local/share/applications"
 
 echo 
 echo "DONE!" 
 echo "Please add the following command to your hyprland.conf of you want to restore the changes after logging in."
 echo "exec-once = ~/.config/ml4w-hyprland-settings/hyprctl.sh"
 echo 
-echo "You can start the app from your application launcher or with the terminal from the folder apps."
+echo "You can start the app from your application launcher or with the terminal from the folder apps with:"
+echo "./ML4W_Hyprland_Settings-x86_64.AppImage"
