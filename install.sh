@@ -41,6 +41,8 @@ packages=(
     "gtk4" 
     "libadwaita" 
     "python"
+    "python-gobject"
+
 )
 
 # Some colors
@@ -89,7 +91,7 @@ echo
 # Decide on installation directory
 echo ":: Installation started"
 if [ ! -d $HOME/.local/share/applications/ ] ;then
-    mkdir $HOME/.local/share/applications/
+    mkdir -p $HOME/.local/share/applications/
     echo ":: $HOME/.local/share/applications/ created"
 fi
 if [ ! -d ~/apps ] ;then
