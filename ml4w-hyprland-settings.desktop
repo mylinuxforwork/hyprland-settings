@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
-Name=ML4W Hyprland Settings App
-Exec=HOME/apps/ML4W_Hyprland_Settings-x86_64.AppImage
-Icon=HOME/apps/ml4w-hyprland-settings.png
+Name=ML4W Hyprland Settings
+Exec=HOME
+Icon=icon
 Terminal=false
 Categories=Utility

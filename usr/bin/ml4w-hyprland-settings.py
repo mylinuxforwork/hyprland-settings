@@ -404,7 +404,7 @@ class MyApp(Adw.Application):
             application_icon="application-x-executable",
             application_name="ML4W Hyprland Settings App",
             developer_name="Stephan Raabe",
-            version="1.0",
+            version="1.0 RC1",
             website="https://gitlab.com/stephan-raabe/ml4w-hyprland-settings",
             issue_url="https://gitlab.com/stephan-raabe/ml4w-hyprland-settings/-/issues",
             support_url="https://gitlab.com/stephan-raabe/ml4w-hyprland-settings/-/issues",

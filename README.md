@@ -1,4 +1,4 @@
-# ML4W Hyprland Settings 1.0 BETA 1
+# ML4W Hyprland Settings 1.0 RC1
 
 This applications supports you to customize your Hyprland installation. You can overwrite the existing configuration with custom values without adding complex configuration files.
 
@@ -6,21 +6,26 @@ This applications supports you to customize your Hyprland installation. You can 
 
 # Installation
 
-You can use the integrated installer script to setup the application on your system.
-
-<a href="https://gitlab.com/stephan-raabe/ml4w-hyprland-settings/-/raw/main/install.sh?ref_type=heads&inline=false">Download the install.sh file here</a>
-
 ```
-# 1.) Change into to the downloads folder
+# git is required
+sudo pacman -S git
+
+# Change into your Downloads directory
 cd ~/Downloads
 
-# 2.) Make the install.sh executable
-chmod +x install.sh
+# Clone the packages
+git clone --depth 1 https://gitlab.com/stephan-raabe/ml4w-hyprland-settings.git
 
-# 3.) Start the installation
+# Change into the folder
+cd ml4w-hyprland-settings
+
+# Start the script
 ./install.sh
-
 ```
+
+The script will install the app into the folder apps in your HOME directory. 
+
+You can move the file also to another folder. In that case your have to edit the desktop file and update the Exec path to teh new loaction in .local/share/applications/ml4w-hyprland-settings.desktop
 
 # How to use it
 
