@@ -52,6 +52,8 @@ To restore the changes after a later login or after a reboot, please add the fol
 exec-once = ~/.config/ml4w-hyprland-settings/hyprctl.sh
 ```
 
+In the folder ~/.config/ml4w-hyprland-settings you will also find the stored values that yoou have set with the app.
+
 # Dependencies
 
 - jp

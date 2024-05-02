@@ -195,7 +195,7 @@
                 },
                 {
                     "type": "SpinRowFloat",
-                    "title": "Windw Shadow Scale",
+                    "title": "Window Shadow Scale",
                     "subtitle": "Shadow scale of a window.",
                     "keyword": "decoration:shadow_scale",
                     "lower": 0,
