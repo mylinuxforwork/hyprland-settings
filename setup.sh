@@ -51,8 +51,5 @@ git clone --depth 1 https://gitlab.com/stephan-raabe/ml4w-hyprland-settings.git
 # Change into the folder
 cd ml4w-hyprland-settings
 
-echo ":: Starting the installation now..."
-sleep 3
-
 # Start the script
 ./install.sh
