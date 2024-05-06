@@ -8,7 +8,7 @@ This applications supports you to customize your Hyprland installation. You can 
 
 The easiest way is to use the setup.sh script. The script will clone all files from GitLab and start the installation.
 
-Just copy/enter the following command itno your terminal.
+Just copy/enter the following command into your terminal.
 
 ```
 bash <(curl -s "https://gitlab.com/stephan-raabe/ml4w-hyprland-settings/-/raw/main/setup.sh") ~/Downloads
