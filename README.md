@@ -66,7 +66,7 @@ In the folder ~/.config/ml4w-hyprland-settings you will also find the stored val
 
 # Dependencies
 
-- jp
+- jq
 - fuse2
 - gtk4
 - libadwaita
