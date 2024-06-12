@@ -65,16 +65,6 @@
                     "default": 0
                 },
                 {
-                    "type": "SpinRow",
-                    "title": "Cursor Inactive Timeout",
-                    "subtitle": "After how many seconds of cursor’s inactivity to hide it (0 for never)",
-                    "keyword": "general:cursor_inactive_timeout",
-                    "lower": 0,
-                    "upper": 60,
-                    "step": 1,
-                    "default": 0
-                },
-                {
                     "type": "SwitchRow",
                     "title": "No Focus Fallback",
                     "subtitle": "If true, will not fall back to the next available window when moving focus in a direction where no window was found",

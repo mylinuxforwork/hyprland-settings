@@ -2,7 +2,7 @@
 <interface>
   <requires lib="gtk" version="4.0"/>
   <requires lib="Adw" version="1.0"/>
-  <template class="Ml4wSettingsWindow" parent="AdwPreferencesWindow">
+  <template class="Ml4wHyprlandSettingsWindow" parent="AdwPreferencesWindow">
     <property name="default-width">800</property>
     <property name="default-height">600</property>
     <property name="title">Hyprland Settings</property>

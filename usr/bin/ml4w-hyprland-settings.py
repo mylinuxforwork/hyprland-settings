@@ -35,12 +35,12 @@ pathname = os.path.dirname(sys.argv[0])
 # Main Window
 # -----------------------------------------
 class MainWindow(Adw.PreferencesWindow):
-    __gtype_name__ = 'Ml4wSettingsWindow'
+    __gtype_name__ = 'Ml4wHyprlandSettingsWindow'
+
     settings_page = Gtk.Template.Child()
     options_page = Gtk.Template.Child()
     keywords_group = Gtk.Template.Child()
 
-    # Get objects from template
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -62,19 +62,18 @@ class MyApp(Adw.Application):
     keyword_blocked = False # Temp Status of removing a keyword
 
     def __init__(self, **kwargs):
-        super().__init__(application_id='com.ml4w.hyprlandsettings',
-                         flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
+        super().__init__(application_id='com.ml4w.hyprland.settings', flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about)
 
     def do_activate(self):
-        # Setup Configuration      
-        self.runSetup()
-
         # Define main window
         win = self.props.active_window
         if not win:
             win = MainWindow(application=self)
+
+        # Setup Configuration      
+        self.runSetup()
 
         # Get pages
         self.settings_page = win.settings_page
@@ -91,7 +90,7 @@ class MyApp(Adw.Application):
 
         if (self.init_hyprctl):
             value = "true"
-            print(":: Execute: " + self.settingsFolder + "hyprctl.sh")
+            print(":: Execute: " + self.settingsFolder + "/hyprctl.sh")
             subprocess.Popen(self.settingsFolder + "/hyprctl.sh")
 
         # Show Application Window
@@ -404,7 +403,7 @@ class MyApp(Adw.Application):
             application_icon="application-x-executable",
             application_name="ML4W Hyprland Settings App",
             developer_name="Stephan Raabe",
-            version="1.0 RC1",
+            version="1.1",
             website="https://gitlab.com/stephan-raabe/ml4w-hyprland-settings",
             issue_url="https://gitlab.com/stephan-raabe/ml4w-hyprland-settings/-/issues",
             support_url="https://gitlab.com/stephan-raabe/ml4w-hyprland-settings/-/issues",
