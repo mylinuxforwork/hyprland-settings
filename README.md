@@ -1,4 +1,4 @@
-# ML4W Hyprland Settings 1.0 RC1
+# ML4W Hyprland Settings 1.0
 
 This applications supports you to customize your Hyprland installation. You can overwrite the existing configuration with custom values without adding complex configuration files.
 
@@ -11,7 +11,7 @@ The easiest way is to use the setup.sh script. The script will clone all files f
 Just copy/enter the following command into your terminal.
 
 ```
-bash <(curl -s "https://gitlab.com/stephan-raabe/ml4w-hyprland-settings/-/raw/main/setup.sh")
+bash <(curl -s https://raw.githubusercontent.com/mylinuxforwork/hyprland-settings/main/setup.sh)
 ```
 
 Or you clone the repository manually with these commands:
@@ -24,10 +24,10 @@ sudo pacman -S git
 cd ~/Downloads
 
 # Clone the packages
-git clone --depth 1 https://gitlab.com/stephan-raabe/ml4w-hyprland-settings.git
+git clone --depth 1 https://github.com/mylinuxforwork/hyprland-settings.git
 
 # Change into the folder
-cd ml4w-hyprland-settings
+cd hyprland-settings
 
 # Start the script
 ./install.sh
