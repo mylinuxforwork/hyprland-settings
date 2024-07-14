@@ -45,11 +45,15 @@ if [ -d ml4w-hyprland-settings ] ;then
     rm -rf ml4w-hyprland-settings
 fi
 
+if [ -d hyprland-settings ] ;then
+    rm -rf hyprland-settings
+fi
+
 # Clone the packages
-git clone --depth 1 https://gitlab.com/stephan-raabe/ml4w-hyprland-settings.git
+git clone --depth 1 https://github.com/mylinuxforwork/hyprland-settings.git
 
 # Change into the folder
-cd ml4w-hyprland-settings
+cd hyprland-settings
 
 # Start the script
 ./install.sh
