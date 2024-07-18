@@ -403,10 +403,10 @@ class MyApp(Adw.Application):
             application_icon="application-x-executable",
             application_name="ML4W Hyprland Settings App",
             developer_name="Stephan Raabe",
-            version="1.1",
-            website="https://gitlab.com/stephan-raabe/ml4w-hyprland-settings",
-            issue_url="https://gitlab.com/stephan-raabe/ml4w-hyprland-settings/-/issues",
-            support_url="https://gitlab.com/stephan-raabe/ml4w-hyprland-settings/-/issues",
+            version="1.2",
+            website="https://github.com/mylinuxforwork/hyprland-settings",
+            issue_url="https://github.com/mylinuxforwork/hyprland-settings/issues",
+            support_url="https://github.com/mylinuxforwork/hyprland-settings/issues",
             copyright="© 2024 Stephan Raabe",
             license_type=Gtk.License.GPL_3_0_ONLY
         )

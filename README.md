@@ -1,4 +1,4 @@
-# ML4W Hyprland Settings 1.0
+# ML4W Hyprland Settings 1.2
 
 This applications supports you to customize your Hyprland installation. You can overwrite the existing configuration with custom values without adding complex configuration files.
 
