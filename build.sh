@@ -12,5 +12,5 @@ cd ..
 ARCH=x86_64 appimagetool tmp
 echo ":: AppImage created"
 # cp ML4W_Hyprland_Settings-x86_64.AppImage ~/hyprland-settings/release/
-cp ML4W_Hyprland_Settings-x86_64.AppImage ~/dotfiles-versions/dotfiles/dotfiles/apps/
-echo ":: AppImage copied to ~/dotfiles-versions/dotfiles/dotfiles/apps/"
+cp ML4W_Hyprland_Settings-x86_64.AppImage ~/.ml4w-hyprland/dotfiles/share/dotfiles/.config/ml4w/apps/
+echo ":: AppImage copied to ~/.ml4w-hyprland/dotfiles/share/dotfiles/.config/ml4w/apps/"
