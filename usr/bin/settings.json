@@ -39,8 +39,8 @@
                     "title": "Windows Gaps In",
                     "subtitle": "Define gaps between windows",
                     "keyword": "general:gaps_in",
-                    "lower": 1,
-                    "upper": 20,
+                    "lower": 0,
+                    "upper": 50,
                     "step": 1,
                     "default": 5
                 },
@@ -49,8 +49,8 @@
                     "title": "Windows Gaps Out",
                     "subtitle": "Define gaps between windows and monitor edges",
                     "keyword": "general:gaps_out",
-                    "lower": 1,
-                    "upper": 40,
+                    "lower": 0,
+                    "upper": 50,
                     "step": 1,
                     "default": 20
                 },
