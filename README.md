@@ -35,7 +35,7 @@ cd hyprland-settings
 
 The script will install the app into the folder apps in your HOME directory. 
 
-You can move the file also to another folder. In that case your have to edit the desktop file and update the Exec path to teh new loaction in .local/share/applications/ml4w-hyprland-settings.desktop
+You can move the file also to another folder. In that case your have to edit the desktop file and update the Exec path to the new loaction in .local/share/applications/ml4w-hyprland-settings.desktop
 
 # How to use it
 
