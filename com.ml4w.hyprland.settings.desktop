@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Name=ML4W Hyprland App
+Name=ML4W_Hyprland_Settings
 Exec=com.ml4w.hyprland.settings
 Icon=com.ml4w.hyprland.settings
 Terminal=false
