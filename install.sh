@@ -99,8 +99,8 @@ if [ ! -d ~/apps ] ;then
     echo ":: apps folder created in $HOME"
 fi
 cp release/ML4W_Hyprland_Settings-x86_64.AppImage ~/apps
-cp icon.png ~/.local/share/applications/ml4w-hyprland-settings.png
-cp ml4w-hyprland-settings.desktop ~/.local/share/applications
+cp com.ml4w.hyprland.settings.png ~/.local/share/applications/ml4w-hyprland-settings.png
+cp com.ml4w.hyprland.settings.desktop ~/.local/share/applications
 
 APPIMAGE="$HOME/apps/ML4W_Hyprland_Settings-x86_64.AppImage"
 ICON="$HOME/.local/share/applications/ml4w-hyprland-settings.png"

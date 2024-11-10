@@ -347,6 +347,10 @@ class MyApp(Adw.Application):
         outcome = result.stdout
         out_arr = outcome.split("\n")
         value = outcome.split("\n")[0]
+
+        # Debug to check if keyword exits. Will break if keyword isn't available anymore
+        # print(keyword)
+        
         if "int" in value:
             int_val = value.split("int: ")[1]
         if "float" in value:
