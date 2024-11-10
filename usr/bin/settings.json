@@ -66,13 +66,6 @@
                 },
                 {
                     "type": "SwitchRow",
-                    "title": "No Focus Fallback",
-                    "subtitle": "If true, will not fall back to the next available window when moving focus in a direction where no window was found",
-                    "keyword": "general:no_focus_fallback",
-                    "default": false
-                },
-                {
-                    "type": "SwitchRow",
                     "title": "Resize Windows On Border",
                     "subtitle": "Enables resizing windows by clicking and dragging on borders and gaps",
                     "keyword": "general:resize_on_border",
