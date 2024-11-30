@@ -232,7 +232,7 @@
             "rows": [
                 {
                     "type": "SwitchRow",
-                    "title": "Blue Enabled",
+                    "title": "Blur Enabled",
                     "subtitle": "Enable kawase window background blur",
                     "keyword": "decoration:blur:enabled",
                     "default": true
