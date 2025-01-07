@@ -100,12 +100,12 @@ if [ ! -d ~/apps ] ;then
 fi
 cp release/ML4W_Hyprland_Settings-x86_64.AppImage ~/apps
 cp com.ml4w.hyprland.settings.png ~/.local/share/applications/ml4w-hyprland-settings.png
-cp com.ml4w.hyprland.settings.desktop ~/.local/share/applications
+cp com.ml4w.hyprland.settings.desktop ~/.local/share/applications/
 
 APPIMAGE="$HOME/apps/ML4W_Hyprland_Settings-x86_64.AppImage"
 ICON="$HOME/.local/share/applications/ml4w-hyprland-settings.png"
-sed -i "s|HOME|${APPIMAGE}|g" $HOME/.local/share/applications/ml4w-hyprland-settings.desktop
-sed -i "s|icon|${ICON}|g" $HOME/.local/share/applications/ml4w-hyprland-settings.desktop
+sed -i "s|HOME|${APPIMAGE}|g" $HOME/.local/share/applications/com.ml4w.hyprland.settings.desktop
+sed -i "s|icon|${ICON}|g" $HOME/.local/share/applications/com.ml4w.hyprland.settings.desktop
 echo ":: Desktop file and icon installed successfully in ~/.local/share/applications"
 
 echo 
