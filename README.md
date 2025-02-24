@@ -20,7 +20,7 @@ https://raw.githubusercontent.com/mylinuxforwork/dotfiles/main/share/apps/com.ml
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # Install the runtime
-flatpak -y install org.gnome.Platform/x86_64/47
+sudo flatpak -y install org.gnome.Platform/x86_64/47
 
 # Open the Download folder
 cd ~/Downloads
