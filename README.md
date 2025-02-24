@@ -37,7 +37,7 @@ flatpak --user install com.ml4w.hyprlandsettings.flatpak
 
 You can download the latest version here: 
 
-https://raw.githubusercontent.com/mylinuxforwork/dotfiles/main/share/apps/com.ml4w.hyprlandsettings.flatpak
+https://raw.githubusercontent.com/mylinuxforwork/hyprland-settings/master/com.ml4w.hyprlandsettings.flatpak
 
 ```
 # Open the Download folder
