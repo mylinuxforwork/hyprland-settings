@@ -385,7 +385,7 @@ class HyprlandSettingsApplication(Adw.Application):
         about = Adw.AboutDialog(
             application_name="ML4W Hyprland Settings App",
             developer_name="Stephan Raabe",
-            version="1.0",
+            version="1.1",
             website="https://github.com/mylinuxforwork/hyprland-settings",
             issue_url="https://github.com/mylinuxforwork/hyprland-settings/issues",
             support_url="https://github.com/mylinuxforwork/hyprland-settings/issues",
