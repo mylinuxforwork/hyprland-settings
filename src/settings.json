@@ -144,6 +144,50 @@
                 },
                 {
                     "type": "SwitchRow",
+                    "title": "Window Inactive Dimming",
+                    "subtitle": "Enables dimming of inactive windows",
+                    "keyword": "decoration:dim_inactive",
+                    "default": false
+                },
+                {
+                    "type": "SpinRowFloat",
+                    "title": "Window Dimming Strength",
+                    "subtitle": "Define the strength for window dimming",
+                    "keyword": "decoration:dim_strength",
+                    "lower": 0,
+                    "upper": 10,
+                    "step": 1,
+                    "default": 5
+                },
+                {
+                    "type": "SpinRowFloat",
+                    "title": "Window Dimming Special",
+                    "subtitle": "Define how much to dim the rest of the screen by when a special workspace is open.",
+                    "keyword": "decoration:dim_special",
+                    "lower": 0,
+                    "upper": 10,
+                    "step": 1,
+                    "default": 2
+                },
+                {
+                    "type": "SpinRowFloat",
+                    "title": "Window Dim Around",
+                    "subtitle": "Define how much the dimaround window rule.",
+                    "keyword": "decoration:dim_around",
+                    "lower": 0,
+                    "upper": 10,
+                    "step": 1,
+                    "default": 4
+                }
+            ]
+        },
+        {
+        		"title": "Shadow",
+        		"description": "Shadow settings for your windows.",
+        		"page": "settings_page",
+        		"rows": [
+                {
+                    "type": "SwitchRow",
                     "title": "Window Drop Shadow",
                     "subtitle": "Toggle window drop shadow",
                     "keyword": "decoration:shadow:enabled",
@@ -185,45 +229,8 @@
                     "upper": 10,
                     "step": 1,
                     "default": 10
-                },
-                {
-                    "type": "SwitchRow",
-                    "title": "Window Inactive Dimming",
-                    "subtitle": "Enables dimming of inactive windows",
-                    "keyword": "decoration:dim_inactive",
-                    "default": false
-                },
-                {
-                    "type": "SpinRowFloat",
-                    "title": "Window Dimming Strength",
-                    "subtitle": "Define the strength for window dimming",
-                    "keyword": "decoration:dim_strength",
-                    "lower": 0,
-                    "upper": 10,
-                    "step": 1,
-                    "default": 5
-                },
-                {
-                    "type": "SpinRowFloat",
-                    "title": "Window Dimming Special",
-                    "subtitle": "Define how much to dim the rest of the screen by when a special workspace is open.",
-                    "keyword": "decoration:dim_special",
-                    "lower": 0,
-                    "upper": 10,
-                    "step": 1,
-                    "default": 2
-                },
-                {
-                    "type": "SpinRowFloat",
-                    "title": "Window Dim Around",
-                    "subtitle": "Define how much the dimaround window rule.",
-                    "keyword": "decoration:dim_around",
-                    "lower": 0,
-                    "upper": 10,
-                    "step": 1,
-                    "default": 4
-                }                                                                
-            ]
+                }
+        		]
         },
         {
             "title": "Blur",
