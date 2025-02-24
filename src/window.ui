@@ -9,7 +9,7 @@
     <child>
       <object class="AdwPreferencesPage" id="settings_page">
         <property name="title">Hyprland Settings</property>
-        <property name="icon-name">settings-symbolic</property>
+        <property name="icon-name">zoom-in-symbolic</property>
       </object>
     </child>
     <child>
