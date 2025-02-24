@@ -1,72 +1,38 @@
-# ML4W Hyprland Settings 1.2
+# ML4W Hyprland Settings App
 
 This applications supports you to customize your Hyprland installation. You can overwrite the existing configuration with custom values without adding complex configuration files.
 
-[![Screenshot](screenshots/screenshot.png "Title Text")](screenshots/screenshot.png)
-
 # Installation
 
-The easiest way is to use the setup.sh script. The script will clone all files from GitLab and start the installation.
+The app is available as flatpak but requires currently a manual installation and update.
 
-Just copy/enter the following command into your terminal.
+You can download the app here: 
 
-```
-bash <(curl -s https://raw.githubusercontent.com/mylinuxforwork/hyprland-settings/main/setup.sh)
-```
+https://raw.githubusercontent.com/mylinuxforwork/dotfiles/main/share/apps/com.ml4w.hyprlandsettings.flatpak
 
-Or you clone the repository manually with these commands:
+# Install Flatpak on your distribution
+# https://flatpak.org/setup/
 
-```
-# git is required
-sudo pacman -S git
+# Add flathub remote
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
-# Change into your Downloads directory
+# Install the runtime
+flatpak -y install org.gnome.Platform/x86_64/47
+
+# Open the Download folder
 cd ~/Downloads
 
-# Clone the packages
-git clone --depth 1 https://github.com/mylinuxforwork/hyprland-settings.git
+# Install the flatpak
+flatpak --user install com.ml4w.hyprlandsettings.flatpak
 
-# Change into the folder
-cd hyprland-settings
+# Update
 
-# Start the script
-./install.sh
-```
+You can download the latest version here: 
 
-The script will install the app into the folder apps in your HOME directory. 
+https://raw.githubusercontent.com/mylinuxforwork/dotfiles/main/share/apps/com.ml4w.hyprlandsettings.flatpak
 
-You can move the file also to another folder. In that case your have to edit the desktop file and update the Exec path to teh new loaction in .local/share/applications/ml4w-hyprland-settings.desktop
+# Open the Download folder
+cd ~/Downloads
 
-# How to use it
-
-You can start the application from your application launcher or with your terminal from the apps folder with
-
-```
-# 1.) Change into to the apps folder
-cd ~/apps
-
-# 2.) Start the app
-./ML4W_Hyprland_Settings-x86_64.AppImage
-
-```
-
-The app shows variables and current values of your running Hyprland.
-
-You can change the values and overwrite the existing values. The change will be axecuted immediatly.
-
-In the Set Variables tab you can see which values you have overwritten and can restore the old values be removing the entry.
-
-To restore the changes after a later login or after a reboot, please add the following line to your hyprland.conf
-
-```
-exec = ~/.config/ml4w-hyprland-settings/hyprctl.sh
-```
-
-In the folder ~/.config/ml4w-hyprland-settings you will also find the stored values that yoou have set with the app.
-
-# Dependencies
-
-- jq
-- fuse2
-- gtk4
-- libadwaita
+# Install the flatpak
+flatpak --user -y --reinstall install com.ml4w.hyprlandsettings.flatpak
