@@ -4,6 +4,10 @@ This applications supports you to customize your Hyprland installation. You can 
 
 ![image](https://github.com/user-attachments/assets/dd1eb200-ccfe-46d6-8137-de6b10abf0b9)
 
+# Requirements
+
+The ML4W Hyprland Settings App can only be launched from a running Hyprland Session.
+
 # Installation
 
 The app is available as flatpak but requires currently a manual installation and update.
