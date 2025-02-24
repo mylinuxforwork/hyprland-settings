@@ -8,16 +8,6 @@ This applications supports you to customize your Hyprland installation. You can 
 
 The ML4W Hyprland Settings App can only be launched from a running Hyprland Session.
 
-# Installation
-
-Visit the releases page (https://github.com/mylinuxforwork/hyprland-settings/releases) and download the file com.ml4w.hyprlandsettings.flatpak
-
-The app is available as flatpak but requires currently a manual installation and update.
-
-You can download the app here: 
-
-https://github.com/mylinuxforwork/hyprland-settings/releases/download/1.1/com.ml4w.hyprlandsettings.flatpak
-
 ```
 # Install Flatpak on your distribution
 # https://flatpak.org/setup/
@@ -27,7 +17,15 @@ flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.f
 
 # Install the runtime
 sudo flatpak -y install org.gnome.Platform/x86_64/47
+```
 
+# Installation
+
+The app is now available as flatpak but requires currently a manual installation and update.
+
+Visit the releases page (https://github.com/mylinuxforwork/hyprland-settings/releases) and download the file com.ml4w.hyprlandsettings.flatpak
+
+```
 # Open the Download folder
 cd ~/Downloads
 
