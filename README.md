@@ -10,11 +10,13 @@ The ML4W Hyprland Settings App can only be launched from a running Hyprland Sess
 
 # Installation
 
+Visit the releases page (https://github.com/mylinuxforwork/hyprland-settings/releases) and download the file com.ml4w.hyprlandsettings.flatpak
+
 The app is available as flatpak but requires currently a manual installation and update.
 
 You can download the app here: 
 
-https://raw.githubusercontent.com/mylinuxforwork/hyprland-settings/master/com.ml4w.hyprlandsettings.flatpak
+https://github.com/mylinuxforwork/hyprland-settings/releases/download/1.1/com.ml4w.hyprlandsettings.flatpak
 
 ```
 # Install Flatpak on your distribution
@@ -35,9 +37,7 @@ flatpak --user install com.ml4w.hyprlandsettings.flatpak
 
 # Update
 
-You can download the latest version here: 
-
-https://raw.githubusercontent.com/mylinuxforwork/hyprland-settings/master/com.ml4w.hyprlandsettings.flatpak
+Visit the releases page (https://github.com/mylinuxforwork/hyprland-settings/releases) and download the file com.ml4w.hyprlandsettings.flatpak
 
 ```
 # Open the Download folder
