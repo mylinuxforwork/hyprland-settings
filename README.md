@@ -14,7 +14,7 @@ The app is available as flatpak but requires currently a manual installation and
 
 You can download the app here: 
 
-https://raw.githubusercontent.com/mylinuxforwork/dotfiles/main/share/apps/com.ml4w.hyprlandsettings.flatpak
+https://raw.githubusercontent.com/mylinuxforwork/hyprland-settings/master/com.ml4w.hyprlandsettings.flatpak
 
 ```
 # Install Flatpak on your distribution
