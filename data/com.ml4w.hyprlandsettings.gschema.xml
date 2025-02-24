@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="hyprland-settings">
+	<schema id="com.ml4w.hyprlandsettings" path="/com/ml4w/hyprlandsettings/">
+	</schema>
+</schemalist>

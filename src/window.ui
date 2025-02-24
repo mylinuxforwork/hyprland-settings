@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="Adw" version="1.0"/>
+  <template class="Ml4wHyprlandSettingsWindow" parent="AdwPreferencesWindow">
+    <property name="default-width">800</property>
+    <property name="default-height">600</property>
+    <property name="title">Hyprland Settings</property>
+    <child>
+      <object class="AdwPreferencesPage" id="settings_page">
+        <property name="title">Hyprland Settings</property>
+        <property name="icon-name">settings-symbolic</property>
+      </object>
+    </child>
+    <child>
+      <object class="AdwPreferencesPage" id="options_page">
+        <property name="title">Set Variables</property>
+        <property name="icon-name">open-menu-symbolic</property>
+        <child>
+          <object class="AdwPreferencesGroup" id="keywords_group">
+            <property name="title">Used Variables</property>
+            <property name="description">This list shows all variables overwritten by the settings app. Remove an entry to restore keyword from hyprland.conf.</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="AdwPreferencesPage" id="about_page">
+        <property name="title">About</property>
+        <property name="icon-name">help-about-symbolic</property>
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">1</property>
+            <property name="halign">5</property>
+            <property name="margin-top">100</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="true">ML4W Hyprland Settings App</property>
+                <style>
+                  <class name="title-1"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="button">
+                <property name="label" translatable="true">About</property>
+                <property name="halign">3</property>
+                <property name="margin-top">30</property>
+                <property name="action-name">app.about</property>
+                <style>
+                  <class name="pill"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLinkButton">
+                <property name="label" translatable="true">GitHub Repository</property>
+                <property name="uri">https://github.com/mylinuxforwork/hyprland-settings</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

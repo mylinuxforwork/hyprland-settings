@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=com.ml4w.hyprlandsettings
+Exec=@bindir@/hyprland-settings --gapplication-service

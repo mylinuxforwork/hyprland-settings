@@ -1,0 +1,8 @@
+# List of source files containing translatable strings.
+# Please keep this file sorted alphabetically.
+data/com.ml4w.hyprland.settings.desktop.in
+data/com.ml4w.hyprland.settings.metainfo.xml.in
+data/com.ml4w.hyprland.settings.gschema.xml
+src/main.py
+src/window.py
+src/window.ui

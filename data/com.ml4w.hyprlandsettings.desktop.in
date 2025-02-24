@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=ML4W Hyprland Setting App
+Exec=hyprland-settings
+Icon=com.ml4w.hyprlandsettings
+Terminal=false
+Type=Application
+Categories=Utility;
+Keywords=GTK;
+StartupNotify=true
+DBusActivatable=true
