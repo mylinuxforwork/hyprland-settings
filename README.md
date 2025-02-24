@@ -2,6 +2,8 @@
 
 This applications supports you to customize your Hyprland installation. You can overwrite the existing configuration with custom values without adding complex configuration files.
 
+![image](https://github.com/user-attachments/assets/dd1eb200-ccfe-46d6-8137-de6b10abf0b9)
+
 # Installation
 
 The app is available as flatpak but requires currently a manual installation and update.
