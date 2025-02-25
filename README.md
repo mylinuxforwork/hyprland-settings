@@ -36,10 +36,10 @@ flatpak --user install com.ml4w.hyprlandsettings.flatpak
 To restore the changes after a later login or after a reboot, please add the following line to your hyprland.conf
 
 ```
-exec = ~/.config/ml4w-hyprland-settings/hyprctl.sh
+exec = ~/.config/com.ml4w.hyprlandsettings/hyprctl.sh
 ```
 
-In the folder ~/.config/ml4w-hyprland-settings you will also find the stored values that yoou have set with the app.
+In the folder ~/.config/com.ml4whyprlandsettings you will also find the stored values that yoou have set with the app.
 
 # Update
 
