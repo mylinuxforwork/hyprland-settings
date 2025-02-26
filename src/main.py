@@ -226,7 +226,7 @@ class HyprlandSettingsApplication(Adw.Application):
     def on_spinfloat_change(self,adjust,*data):
         if not self.keyword_blocked:
             value = adjust.get_value()/10
-            subprocess.Popen(["hyprctl", "keyword", data[1]["keyword"], str(value)])
+            subprocess.Popen(["flatpak-spawn", "--host", "hyprctl", "keyword", data[1]["keyword"], str(value)])
             if data[1]["keyword"] not in self.hyprctl:
                 self.createActionRow(data[1]["keyword"])
             self.updateHyprctl(data[1]["keyword"],value)
@@ -307,7 +307,7 @@ class HyprlandSettingsApplication(Adw.Application):
             if data[1]["keyword"] not in self.hyprctl:
                 self.createActionRow(data[1]["keyword"])
             self.updateHyprctl(data[1]["keyword"],rgba_hex)
-            subprocess.Popen(["hyprctl", "keyword", data[1]["keyword"], rgba_hex])
+            subprocess.Popen(["flatpak-spawn", "--host", "hyprctl", "keyword", data[1]["keyword"], rgba_hex])
         self.keyword_blocked = False
 
     # Update and write hyprctl.json
@@ -385,7 +385,7 @@ class HyprlandSettingsApplication(Adw.Application):
         about = Adw.AboutDialog(
             application_name="ML4W Hyprland Settings App",
             developer_name="Stephan Raabe",
-            version="1.1",
+            version="1.2",
             website="https://github.com/mylinuxforwork/hyprland-settings",
             issue_url="https://github.com/mylinuxforwork/hyprland-settings/issues",
             support_url="https://github.com/mylinuxforwork/hyprland-settings/issues",
