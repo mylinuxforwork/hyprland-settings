@@ -1,66 +1,79 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
   <requires lib="Adw" version="1.0"/>
-  <template class="Ml4wHyprlandSettingsWindow" parent="AdwPreferencesWindow">
-    <property name="default-width">800</property>
-    <property name="default-height">600</property>
-    <property name="title">Hyprland Settings</property>
-    <child>
-      <object class="AdwPreferencesPage" id="settings_page">
-        <property name="title">Hyprland Settings</property>
-        <property name="icon-name">zoom-in-symbolic</property>
-      </object>
-    </child>
-    <child>
-      <object class="AdwPreferencesPage" id="options_page">
-        <property name="title">Set Variables</property>
-        <property name="icon-name">open-menu-symbolic</property>
-        <child>
-          <object class="AdwPreferencesGroup" id="keywords_group">
-            <property name="title">Used Variables</property>
-            <property name="description">This list shows all variables overwritten by the settings app. Remove an entry to restore keyword from hyprland.conf.</property>
+  <template class="Ml4wHyprlandSettingsWindow" parent="AdwApplicationWindow">
+    <property name="title">ML4W Hyprland Settings</property>
+    <property name="default-width">400</property>
+    <property name="default-height">740</property>
+    <property name="content">
+      <object class="AdwToastOverlay">
+        <property name="child">
+          <object class="AdwToolbarView">
+            <child type="top">
+              <object class="AdwHeaderBar">
+                <child type="end">
+                  <object class="GtkMenuButton">
+                    <property name="primary">True</property>
+                    <property name="icon-name">open-menu-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Main Menu</property>
+                    <property name="menu-model">primary_menu</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <property name="content">
+              <object class="GtkBox">
+                <property name="orientation">1</property>
+                <property name="margin-end">12</property>
+                <property name="margin-bottom">12</property>
+                <child>
+                  <object class="AdwPreferencesPage">
+                   <child>
+                     <object class="AdwPreferencesGroup" id="keywords_group">
+                        <property name="title">Your Set Variables</property>
+                        <property name="description">The following variables are already set with your custom value.</property>
+                     </object>
+                   </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">1</property>
+                    <property name="margin-start">20</property>
+                    <property name="margin-end">20</property>
+                    <property name="margin-bottom">12</property>
+                    <property name="halign">3</property>
+                    <child>
+                      <object class="GtkButton" id="pill">
+                        <property name="name">pill</property>
+                        <property name="valign">3</property>
+                        <property name="margin-start">40</property>
+                        <property name="margin-end">40</property>
+                        <property name="label" translatable="yes">All Variables</property>
+                        <property name="action-name">app.settings</property>
+                        <style>
+                          <class name="pill"/>
+                          <class name="suggested-action"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+
+                </child>
+              </object>
+            </property>
           </object>
-        </child>
+        </property>
       </object>
-    </child>
-    <child>
-      <object class="AdwPreferencesPage" id="about_page">
-        <property name="title">About</property>
-        <property name="icon-name">help-about-symbolic</property>
-        <child>
-          <object class="GtkBox">
-            <property name="orientation">1</property>
-            <property name="halign">5</property>
-            <property name="margin-top">100</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="label" translatable="true">ML4W Hyprland Settings App</property>
-                <style>
-                  <class name="title-1"/>
-                </style>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="button">
-                <property name="label" translatable="true">About</property>
-                <property name="halign">3</property>
-                <property name="margin-top">30</property>
-                <property name="action-name">app.about</property>
-                <style>
-                  <class name="pill"/>
-                </style>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLinkButton">
-                <property name="label" translatable="true">GitHub Repository</property>
-                <property name="uri">https://github.com/mylinuxforwork/hyprland-settings</property>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-    </child>
+    </property>
   </template>
+  <menu id="primary_menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">About</attribute>
+        <attribute name="action">app.about</attribute>
+      </item>
+    </section>
+  </menu>
 </interface>
