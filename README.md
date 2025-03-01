@@ -13,7 +13,6 @@ The ML4W Hyprland Settings App can only be launched from a running Hyprland Sess
 # https://flatpak.org/setup/
 
 ```
-
 # Installation
 
 You can install the app with this command from your terminal.
@@ -21,7 +20,6 @@ You can install the app with this command from your terminal.
 ```
 bash <(curl -s https://raw.githubusercontent.com/mylinuxforwork/hyprland-settings/master/setup.sh)
 ```
-
 After the installation you can start the app with:
 
 ```
@@ -32,7 +30,6 @@ To restore the changes after every login into Hyprland, please add the following
 ```
 exec = ~/.config/com.ml4w.hyprlandsettings/hyprctl.sh
 ```
-
 # Update
 
 Just run the installation again.
