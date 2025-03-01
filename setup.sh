@@ -44,11 +44,20 @@ echo ":: Downloading $app"
 if [ ! -d "$HOME/.cache" ]; then
 	mkdir -p "$HOME/.cache"
 fi
+if [ -f "$HOME/.cache/$app.flatpak" ]; then
+	rm "$HOME/.cache/$app.flatpak"
+fi
 wget -P "$HOME/.cache" "$download"
 
 # Install app
 cd "$HOME/.cache"
 flatpak --user -y --reinstall install $app.flatpak
 
+# Cleanup
+if [ -f "$HOME/.cache/$app.flatpak" ]; then
+	rm "$HOME/.cache/$app.flatpak"
+fi
+
+# Finishing up
 echo
 echo ":: Setup complete. Run the app with flatpak run $app"

@@ -12,43 +12,32 @@ The ML4W Hyprland Settings App can only be launched from a running Hyprland Sess
 # Install Flatpak on your distribution
 # https://flatpak.org/setup/
 
-# Add flathub remote
-flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-
-# Install the runtime
-sudo flatpak -y install org.gnome.Platform/x86_64/47
 ```
 
 # Installation
 
-The app is now available as flatpak but requires currently a manual installation and update.
-
-Visit the releases page (https://github.com/mylinuxforwork/hyprland-settings/releases) and download the file com.ml4w.hyprlandsettings.flatpak
+You can install the app with this command from your terminal.
 
 ```
-# Open the Download folder
-cd ~/Downloads
-
-# Install the flatpak
-flatpak --user install com.ml4w.hyprlandsettings.flatpak
+bash <(curl -s https://raw.githubusercontent.com/mylinuxforwork/hyprland-settings/master/setup.sh)
 ```
 
-To restore the changes after a later login or after a reboot, please add the following line to your hyprland.conf
+After the installation you can start the app with:
+
+```
+flatpak run com.ml4w.hyprlandsettings
+```
+To restore the changes after every login into Hyprland, please add the following line to your hyprland.conf
 
 ```
 exec = ~/.config/com.ml4w.hyprlandsettings/hyprctl.sh
 ```
 
-In the folder ~/.config/com.ml4whyprlandsettings you will also find the stored values that yoou have set with the app.
-
 # Update
 
-Visit the releases page (https://github.com/mylinuxforwork/hyprland-settings/releases) and download the file com.ml4w.hyprlandsettings.flatpak
+Just run the installation again.
 
-```
-# Open the Download folder
-cd ~/Downloads
+# Configuration
 
-# Install the flatpak
-flatpak --user -y --reinstall install com.ml4w.hyprlandsettings.flatpak
-```
+In the folder ~/.config/com.ml4whyprlandsettings, you will also find the stored values that you have set with the app.
+
