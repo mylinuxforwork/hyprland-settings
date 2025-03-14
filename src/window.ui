@@ -5,6 +5,7 @@
   <template class="Ml4wHyprlandSettingsWindow" parent="AdwPreferencesWindow">
     <property name="default-width">800</property>
     <property name="default-height">600</property>
+    <property name="resizable">false</property>
     <property name="title">Hyprland Settings</property>
     <child>
       <object class="AdwPreferencesPage" id="settings_page">
