@@ -4,14 +4,25 @@
   <requires lib="Adw" version="1.0"/>
   <template class="Ml4wHyprlandSettingsWindow" parent="AdwApplicationWindow">
     <property name="title">ML4W Hyprland Settings</property>
-    <property name="default-width">400</property>
-    <property name="default-height">740</property>
+    <property name="default-width">800</property>
+    <property name="default-height">600</property>
+    <property name="resizable">false</property>
     <property name="content">
       <object class="AdwToastOverlay">
         <property name="child">
           <object class="AdwToolbarView">
             <child type="top">
               <object class="AdwHeaderBar">
+                <child type="start">
+                  <object class="GtkButton">
+                    <property name="name">destructive</property>
+                    <property name="label" translatable="yes">All Variables</property>
+                    <property name="action-name">app.settings</property>
+                    <style>
+                      <class name="suggested-action"/>
+                    </style>
+                  </object>
+                </child>
                 <child type="end">
                   <object class="GtkMenuButton">
                     <property name="primary">True</property>
@@ -23,44 +34,13 @@
               </object>
             </child>
             <property name="content">
-              <object class="GtkBox">
-                <property name="orientation">1</property>
-                <property name="margin-end">12</property>
-                <property name="margin-bottom">12</property>
-                <child>
-                  <object class="AdwPreferencesPage">
-                   <child>
-                     <object class="AdwPreferencesGroup" id="keywords_group">
-                        <property name="title">Your Set Variables</property>
-                        <property name="description">The following variables are already set with your custom value.</property>
-                     </object>
-                   </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="orientation">1</property>
-                    <property name="margin-start">20</property>
-                    <property name="margin-end">20</property>
-                    <property name="margin-bottom">12</property>
-                    <property name="halign">3</property>
-                    <child>
-                      <object class="GtkButton" id="pill">
-                        <property name="name">pill</property>
-                        <property name="valign">3</property>
-                        <property name="margin-start">40</property>
-                        <property name="margin-end">40</property>
-                        <property name="label" translatable="yes">All Variables</property>
-                        <property name="action-name">app.settings</property>
-                        <style>
-                          <class name="pill"/>
-                          <class name="suggested-action"/>
-                        </style>
-                      </object>
-                    </child>
-                  </object>
-
-                </child>
+              <object class="AdwPreferencesPage">
+               <child>
+                 <object class="AdwPreferencesGroup" id="keywords_group">
+                    <property name="title">Your Set Variables</property>
+                    <property name="description">The following variables are already set with your custom value.</property>
+                 </object>
+               </child>
               </object>
             </property>
           </object>

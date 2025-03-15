@@ -68,8 +68,9 @@ class HyprlandSettingsApplication(Adw.Application):
         win = self.props.active_window
         if not win:
             win = HyprlandSettingsWindow(application=self)
-            self.win_settings = HyprlandKeywordsSettings()
-            self.win_settings.set_modal(True)
+        self.win_settings = HyprlandKeywordsSettings()
+        self.win_settings.set_modal(True)
+        self.win_settings.set_hide_on_close(True)
 
         # Get pages
         self.options_group = self.win_settings.keywords_group
@@ -177,11 +178,13 @@ class HyprlandSettingsApplication(Adw.Application):
 
         # Add Button
         if row["value"] not in self.hyprctl:
+            btn.set_icon_name("xapp-favorite-symbolic")
             btn.set_label("Add")
             self.options_group.add(spinRow)
         else:
-            self.keywords_group.add(spinRow)
+            btn.set_icon_name("xapp-unfavorite-symbolic")
             btn.set_label("Remove")
+            self.keywords_group.add(spinRow)
 
     def on_spin_changed(self,widget,keyword,row):
         if not self.keyword_blocked:
@@ -219,11 +222,14 @@ class HyprlandSettingsApplication(Adw.Application):
 
         # Add Button
         if row["value"] not in self.hyprctl:
+            btn.set_icon_name("xapp-favorite-symbolic")
             btn.set_label("Add")
             self.options_group.add(switchRow)
         else:
-            self.keywords_group.add(switchRow)
+            btn.set_icon_name("xapp-unfavorite-symbolic")
             btn.set_label("Remove")
+            self.keywords_group.add(switchRow)
+
 
     def on_switch_change(self,widget,*data):
 

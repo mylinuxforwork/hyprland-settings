@@ -3,10 +3,10 @@
   <requires lib="gtk" version="4.0"/>
   <requires lib="Adw" version="1.0"/>
   <template class="HyprlandKeywordsSettings" parent="AdwPreferencesWindow">
-    <property name="default-width">800</property>
-    <property name="default-height">600</property>
+    <property name="default-width">750</property>
+    <property name="default-height">650</property>
+    <property name="resizable">false</property>
     <property name="title">Hyprland Variables</property>
-
     <child>
       <object class="AdwPreferencesPage" id="waybar_page">
         <property name="title">Hyprland Variables</property>
