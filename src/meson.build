@@ -30,9 +30,10 @@ hyprland_settings_sources = [
   '__init__.py',
   'main.py',
   'window.py',
-  'hyprctl.sh',
-  'settings.json',
-  'hyprctl.json'
+  'settings.py',
 ]
 
 install_data(hyprland_settings_sources, install_dir: moduledir)
+install_subdir('library', install_dir: moduledir)
+install_subdir('json', install_dir: moduledir)
+install_subdir('scripts', install_dir: moduledir)

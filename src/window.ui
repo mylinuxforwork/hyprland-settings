@@ -1,67 +1,154 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
   <requires lib="Adw" version="1.0"/>
-  <template class="Ml4wHyprlandSettingsWindow" parent="AdwPreferencesWindow">
+  <template class="Ml4wHyprlandSettingsWindow" parent="AdwApplicationWindow">
+    <property name="title">Hyprland Settings</property>
     <property name="default-width">800</property>
     <property name="default-height">600</property>
-    <property name="resizable">false</property>
-    <property name="title">Hyprland Settings</property>
-    <child>
-      <object class="AdwPreferencesPage" id="settings_page">
-        <property name="title">Hyprland Settings</property>
-        <property name="icon-name">zoom-in-symbolic</property>
-      </object>
-    </child>
-    <child>
-      <object class="AdwPreferencesPage" id="options_page">
-        <property name="title">Set Variables</property>
-        <property name="icon-name">open-menu-symbolic</property>
-        <child>
-          <object class="AdwPreferencesGroup" id="keywords_group">
-            <property name="title">Used Variables</property>
-            <property name="description">This list shows all variables overwritten by the settings app. Remove an entry to restore keyword from hyprland.conf.</property>
+    <style>
+      <class name="devel"/>
+    </style>
+    <property name="content">
+      <object class="AdwToastOverlay">
+        <property name="child">
+          <object class="AdwToolbarView">
+            <child type="top">
+              <object class="AdwHeaderBar">
+                <child type="start">
+                  <object class="GtkButton">
+                    <property name="name">destructive</property>
+                    <property name="label" translatable="yes">All Variables</property>
+                    <property name="action-name">app.settings</property>
+                    <style>
+                      <class name="suggested-action"/>
+                    </style>
+                  </object>
+                </child>
+                <child type="end">
+                  <object class="GtkMenuButton">
+                    <property name="primary">True</property>
+                    <property name="icon-name">open-menu-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Main Menu</property>
+                    <property name="menu-model">primary_menu</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <property name="content">
+              <object class="AdwStatusPage">
+                <property name="valign">1</property>
+                <child>
+                  <object class="GtkBox">
+                  <property name="orientation">1</property>
+                  <property name="margin-end">60</property>
+                  <property name="margin-start">60</property>
+                  <property name="spacing">20</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="name">logo</property>
+                        <property name="icon-name">com.ml4w.hyprlandsettings</property>
+                        <property name="pixel-size">128</property>
+                        <style>
+                          <class name="icon-dropshadow"/>
+                        </style>
+                      </object>
+                    </child>
+                    <!-- ML4W Headline -->
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label">Hyprland Settings</property>
+                        <style>
+                          <class name="title-1"/>
+                        </style>
+                      </object>
+                    </child>
+                    <!-- ML4W Headline -->
+
+                    <!-- ML4W Headline -->
+                    <child>
+                      <object class="GtkLabel" id="ml4w_version">
+                        <property name="label">Customize your Hyprland desktop by adjusting variables with hyprctl on the fly. </property>
+                        <property name="margin-bottom">2</property>
+                      </object>
+                    </child>
+                    <!-- ML4W Headline -->
+
+                    <child>
+                      <object class="AdwPreferencesGroup" id="keywords_group">
+                        <property name="visible">false</property>
+                        <property name="title">Your Favorites</property>
+                        <property name="description">The following variables are set with your custom value.</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox" id="novariables">
+                        <property name="spacing">20</property>
+                        <property name="valign">1</property>
+                        <property name="orientation">1</property>
+                        <property name="visible">false</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label">Click on the button to start your customization.</property>
+                            <property name="margin-bottom">2</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton">
+                            <property name="name">destructive</property>
+                            <property name="label" translatable="yes">All Variables</property>
+                            <property name="action-name">app.settings</property>
+                            <property name="halign">center</property>
+                            <style>
+                              <class name="suggested-action"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </property>
           </object>
-        </child>
+        </property>
       </object>
-    </child>
-    <child>
-      <object class="AdwPreferencesPage" id="about_page">
-        <property name="title">About</property>
-        <property name="icon-name">help-about-symbolic</property>
-        <child>
-          <object class="GtkBox">
-            <property name="orientation">1</property>
-            <property name="halign">5</property>
-            <property name="margin-top">100</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="label" translatable="true">ML4W Hyprland Settings App</property>
-                <style>
-                  <class name="title-1"/>
-                </style>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="button">
-                <property name="label" translatable="true">About</property>
-                <property name="halign">3</property>
-                <property name="margin-top">30</property>
-                <property name="action-name">app.about</property>
-                <style>
-                  <class name="pill"/>
-                </style>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLinkButton">
-                <property name="label" translatable="true">GitHub Repository</property>
-                <property name="uri">https://github.com/mylinuxforwork/hyprland-settings</property>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-    </child>
+    </property>
   </template>
+  <menu id="primary_menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Hyprland Wiki</attribute>
+        <attribute name="action">app.hyprland_wiki</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Variables Overview</attribute>
+        <attribute name="action">app.hyprland_variables</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Help</attribute>
+        <attribute name="action">app.help</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Report an Issue</attribute>
+        <attribute name="action">app.report_issue</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Check for Updates</attribute>
+        <attribute name="action">app.check_updates</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">About</attribute>
+        <attribute name="action">app.about</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Quit</attribute>
+        <attribute name="action">app.quit</attribute>
+      </item>
+    </section>
+  </menu>
 </interface>

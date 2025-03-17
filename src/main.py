@@ -26,6 +26,7 @@ import json
 import pathlib
 import shutil
 import time
+from multiprocessing import Process
 
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
@@ -33,284 +34,306 @@ gi.require_version('Adw', '1')
 from gi.repository import Gtk, Adw, Gio, Gdk
 from gi.repository import GLib
 from gi.repository import GObject
-from .window import HyprlandSettingsWindow
 from subprocess import Popen, PIPE
+from .window import HyprlandSettingsWindow
+from .settings import HyprlandKeywordsSettings
+from .library.library import Library
 
-# Get script path
-pathname = str(pathlib.Path(__file__).resolve().parent)
+lib = Library()
 
 # The main application singleton class.
 class HyprlandSettingsApplication(Adw.Application):
 
-    path_name = pathname # Path of Application
-    homeFolder = os.path.expanduser('~') # Path to home folder
-    configFolderName = "com.ml4w.hyprlandsettings" # config folder name
-    configFolder = homeFolder + "/.config/" + configFolderName # Config folder name
-    settingsFolder = "" # Settingsfolder
-    hyprctlFile = "" # hyprctl.conf
     hyprctl = {} # hyprctl dictionary synced with hyprctlfile
     rowtype = {} # rowtype dictionary for keywords
-    pref_rows = {} # Dictionary for pref row objects
     action_rows = {} # Dictionary for action row objects
-    keyword_blocked = False # Temp Status of removing a keyword
+    pref_rows = {} # Dictionary for variables + value
 
+    # List Stores
+    hyprvariablestore = Gio.ListStore()
+
+    # Supported Types
+    supported_types = [0,1,2,7]
+
+    keyword_blocked = False # Temp Status of removing a keyword
     def __init__(self):
         super().__init__(application_id='com.ml4w.hyprlandsettings',
                          flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
+        self.create_action('settings', self.on_settings_action)
+
+        self.create_action('hyprland_wiki', self.on_hyprland_wiki)
+        self.create_action('hyprland_variables', self.on_hyprland_variables)
+        self.create_action('help', self.on_help)
+        self.create_action('report_issue', self.on_report_issue)
+        self.create_action('check_updates', self.on_check_updates)
 
         # Setup Configuration
-        self.runSetup()
+        lib.runSetup()
+
+        # Execute Hyprctl
+        lib.executeHyprCtl()
 
     # Called when the application is activated.
     def do_activate(self):
         win = self.props.active_window
         if not win:
             win = HyprlandSettingsWindow(application=self)
+        self.win_settings = HyprlandKeywordsSettings()
+        # self.props.active_window.hyprvariables_set_list.bind_model(self.hyprvariablestore,self.create_hyprvariable_row)
 
+        # Show main window
+        win.present()
 
         # Get pages
-        self.settings_page = win.settings_page
-        self.options_page = win.options_page
+        self.options_group = self.win_settings.keywords_group
 
         # get groups
         self.keywords_group = win.keywords_group
 
-        # Initialization
-        self.initUI()
+        # novariables
+        self.novariables = win.novariables
 
-        # load hyprctl.sh on startup
-        self.init_hyprctl = True
+        thread = threading.Thread(target=self.initUI)
+        thread.daemon = True
+        thread.start()
 
-        if (self.init_hyprctl):
-            value = "true"
-            print(":: Execute: " + self.settingsFolder + "/hyprctl.sh")
-            subprocess.Popen(["flatpak-spawn", "--host", self.settingsFolder + "/hyprctl.sh"])
 
-        win.present()
+    # Open Settings Window
+    def on_settings_action(self, *args):
+        self.win_settings.present(self.props.active_window)
+        self.win_settings.set_search_enabled(True)
+
+    def check_novariables(self):
+        if len(self.hyprctl) > 0:
+            self.keywords_group.set_visible(True)
+            self.novariables.set_visible(False)
+        else:
+            self.keywords_group.set_visible(False)
+            self.novariables.set_visible(True)
 
     # Initialization of the UI
     def initUI(self):
-        # Load hyprctl.json
-        hyprctl_file = open(self.settingsFolder + "/hyprctl.json")
-        hyprctl_arr = json.load(hyprctl_file)
-        for row in hyprctl_arr:
-            self.hyprctl[row["key"]] = row["value"]
 
-        if os.path.exists(self.settingsFolder + "/settings.json"):
-            # Load Custom configuration
-            config_file = open(self.settingsFolder + '/settings.json')
-            config = json.load(config_file)
-            print(":: Using custom settings.json in " + self.settingsFolder)
-        else:
-            # Load Default configuration
-            config_file = open(self.path_name + '/settings.json')
-            config = json.load(config_file)
-            print(":: Using default settings.json in " + pathname)
+        # Get hyprctl dictionary from hyprctl.json
+        self.hyprctl = lib.getHyprctlDictionary()
+        self.check_novariables()
 
-        # Create Groups
-        for p in config["groups"]:
-            prefGroup = Adw.PreferencesGroup()
-            prefGroup.set_title(p["title"])
-            prefGroup.name="group_" + p["title"]
-            prefGroup.set_description(p["description"])
+        # Load hyprctl descriptions
+        config_json = lib.getHyprctlDescriptions()
 
-            # Create Rows
-            for i in p["rows"]:
-
+        # Create Rows
+        counter = 0
+        for i in config_json:
+            if i["type"] in self.supported_types:
                 # Fill rowtype dictionary
-                self.rowtype[i["keyword"]] = i["type"]
+                self.rowtype[i["value"]] = i["type"]
 
                 # Get row values
-                if i["keyword"] not in self.hyprctl:
-                    value = self.getKeywordValue(i["keyword"])
+                if i["value"] not in self.hyprctl:
+                    value = lib.getKeywordValue(i["value"],self.rowtype)
                 else:
-                    if (i["type"] == "SpinRowFloat"):
-                        value = self.hyprctl[i["keyword"]]*10
-                    else:
-                        value = self.hyprctl[i["keyword"]]
+                    value = self.hyprctl[i["value"]]
+                    # print("Set " + i["value"] + ": " + value)
 
+                # Fill with all keywords and values
+                self.pref_rows[i["value"]] = value
 
-                # Create rows
-                if i["type"] == "SpinRow":
-                    self.createSpinRow(prefGroup,i,value)
-                elif i["type"] == "SpinRowFloat":
-                    self.createSpinFloatRow(prefGroup,i,value)
-                elif i["type"] == "SwitchRow":
-                    self.createSwitchRow(prefGroup,i,value)
-                elif i["type"] == "ColorRow":
-                    self.createColorRow(prefGroup,i,value)
+                # Check for invalid option
+                if value != "no such option":
+                    counter = counter + 1
+                    match i["type"]:
+                        case 0:
+                            self.createSwitchRow(i,value)
+                        case 1:
+                            self.createSpinRow(i,value)
+                        case 2:
+                            self.createSpinRow(i,value)
+                        case 7:
+                            self.createColorRow(i,value)
 
-            self.settings_page.add(prefGroup)
+    # Toggle keyword between options and keywords group
+    def toggle_keyword(self,widget,row,btn,keyword,rtype):
 
-        # Create keyword rows
-        for keyword in self.hyprctl:
-            self.createActionRow(keyword)
+        if rtype == 0:
+            value = "1" if (row.get_active()) else "0"
+        elif rtype == 7:
+            value = self.pref_rows[keyword]
+        else:
+            value = round(row.get_value(), 2)
 
-    # Create ActionRow
-    def createActionRow(self,keyword):
-        actionRow = Adw.ActionRow()
-        actionRow.set_title(keyword)
-        btn = Gtk.Button()
-        btn.set_label("Remove")
-        btn.set_valign(3)
-        btn.connect("clicked",self.remove_keyword,keyword)
-        actionRow.add_suffix(btn)
-        self.keywords_group.add(actionRow)
-        self.action_rows[keyword] = actionRow
+        if btn.get_label() == "Add":
+            # Add keyword to hyprctl.json
+            self.updateHyprctl(keyword,self.pref_rows[keyword])
+            self.options_group.remove(row)
+            self.keywords_group.add(row)
+            btn.set_label("Remove")
+        else:
+            # Remove keyword from hyprctl.json
+            self.removeHyptctl(keyword)
+            btn.set_label("Add")
+            self.keywords_group.remove(row)
+            self.options_group.add(row)
+            lib.reloadHyprctl()
 
-    def remove_keyword(self, widget,v):
-        print(":: Hyprctl Reload")
-        subprocess.Popen(["flatpak-spawn", "--host", "hyprctl", "reload"])
-        self.removeHyptctl(v)
-        self.keywords_group.remove(self.action_rows[v])
-        self.action_rows.pop(v)
-        self.keyword_blocked = True
-        value = self.getKeywordValue(v)
-        if self.rowtype[v] == "SpinRow":
-            self.pref_rows[v].set_value(int(value))
-        if self.rowtype[v] == "SpinRowFloat":
-            self.pref_rows[v].set_value(int(value)*10)
-        if self.rowtype[v] == "SwitchRow":
-            self.pref_rows[v].set_active(value)
-        if self.rowtype[v] == "ColorRow":
-            color_rgba = Gdk.RGBA()
-            if "rgb" in value:
-                color_rgba.parse("#" + value.split("(")[1].split(")")[0])
-            else:
-                color_rgba.parse("#" + value[2:])
-            self.pref_rows[v].set_rgba(color_rgba)
+        self.check_novariables()
 
-        print(":: Execute: " + self.settingsFolder + "/hyprctl.sh")
-        subprocess.Popen(["flatpak-spawn", "--host", self.settingsFolder + "/hyprctl.sh"])
-
+    # -------------------------------------------------------
     # SpinRow
-    def createSpinRow(self,pref,row,value):
-        spinRow = Adw.SpinRow()
-        spinRow.set_title(row["title"])
-        spinRow.set_subtitle(row["subtitle"])
-        adjust = Gtk.Adjustment()
-        adjust.set_lower(row["lower"])
-        adjust.set_upper(row["upper"])
-        adjust.set_value(int(value))
-        adjust.set_step_increment(row["step"])
-        spinRow.set_adjustment(adjust)
-        adjust.connect("value-changed", self.on_spin_change, adjust, row)
-        pref.add(spinRow)
-        self.pref_rows[row["keyword"]] = spinRow
+    # -------------------------------------------------------
+    def createSpinRow(self,row,value):
+        keyword = row["value"]
 
-    def on_spin_change(self,adjust,*data):
+        # Check value type
+        if row["type"] == 1:
+            climb_rate = 1
+            digits = 0
+            value = int(value)
+        else:
+            climb_rate = 0.1
+            digits = 2
+
+        # Create Spin Row
+        spinRow = lib.createSpinRow(keyword,row["description"],value,digits)
+        adjust = lib.createAdjust(row["data"]["min"],row["data"]["max"],climb_rate,value)
+        spinRow.set_adjustment(adjust)
+        adjust.connect("value-changed", self.on_spin_changed, keyword, row)
+        btn = Gtk.Button()
+        btn.set_valign(3)
+        btn.connect("clicked",self.toggle_keyword,spinRow,btn,keyword,row["type"])
+        spinRow.add_prefix(btn)
+
+        # Add Button
+        if row["value"] not in self.hyprctl:
+            btn.set_icon_name("xapp-favorite-symbolic")
+            btn.set_label("Add")
+            self.options_group.add(spinRow)
+        else:
+            btn.set_icon_name("xapp-unfavorite-symbolic")
+            btn.set_label("Remove")
+            self.keywords_group.add(spinRow)
+
+    def on_spin_changed(self,widget,keyword,row):
         if not self.keyword_blocked:
-            subprocess.Popen(["flatpak-spawn", "--host", "hyprctl", "keyword", data[1]["keyword"], str(int(adjust.get_value()))])
-            if data[1]["keyword"] not in self.hyprctl:
-                self.createActionRow(data[1]["keyword"])
-            self.updateHyprctl(data[1]["keyword"],int(adjust.get_value()))
+
+            # Convert value format
+            if row["type"] == 1:
+                value = int(widget.get_value())
+            else:
+                value = round(widget.get_value(), 2)
+
+            if keyword in self.hyprctl:
+
+                # Update hyprctl.json
+                self.updateHyprctl(keyword,value)
+
+            self.pref_rows[keyword] = value
+
+            # Run hyprctl with new value
+            lib.runHyprctl(keyword,value)
+
         self.keyword_blocked = False
 
-    # SpinRowFloat
-    def createSpinFloatRow(self,pref,row,value):
-        spinRow = Adw.SpinRow()
-        spinRow.set_title(row["title"])
-        spinRow.set_subtitle(row["subtitle"])
-        adjust = Gtk.Adjustment()
-        adjust.set_lower(row["lower"])
-        adjust.set_upper(row["upper"])
-        adjust.set_value(int(value))
-        adjust.set_step_increment(row["step"])
-        spinRow.set_adjustment(adjust)
-        adjust.connect("value-changed", self.on_spinfloat_change, adjust, row)
-        pref.add(spinRow)
-        self.pref_rows[row["keyword"]] = spinRow
+    # -------------------------------------------------------
+    # SwitchRow
+    # -------------------------------------------------------
+    def createSwitchRow(self,row,value):
 
-    def on_spinfloat_change(self,adjust,*data):
-        if not self.keyword_blocked:
-            value = adjust.get_value()/10
-            subprocess.Popen(["flatpak-spawn", "--host", "hyprctl", "keyword", data[1]["keyword"], str(value)])
-            if data[1]["keyword"] not in self.hyprctl:
-                self.createActionRow(data[1]["keyword"])
-            self.updateHyprctl(data[1]["keyword"],value)
-        self.keyword_blocked = False
-
-    #SwitchRow
-    def createSwitchRow(self,pref,row,value):
-        switchRow = Adw.SwitchRow()
-        switchRow.set_title(row["title"])
-        switchRow.set_subtitle(row["subtitle"])
-        switchRow.set_active(value)
+        keyword = row["value"]
+        value = True if (value == "true") else False
+        switchRow = lib.createSwitchRow(keyword,row["description"],value)
         switchRow.connect("notify::active", self.on_switch_change, row)
-        pref.add(switchRow)
-        self.pref_rows[row["keyword"]] = switchRow
+
+        btn = Gtk.Button()
+        btn.set_valign(3)
+        btn.connect("clicked",self.toggle_keyword,switchRow,btn,keyword,row["type"])
+        switchRow.add_prefix(btn)
+
+        # Add Button
+        if row["value"] not in self.hyprctl:
+            btn.set_icon_name("xapp-favorite-symbolic")
+            btn.set_label("Add")
+            self.options_group.add(switchRow)
+        else:
+            btn.set_icon_name("xapp-unfavorite-symbolic")
+            btn.set_label("Remove")
+            self.keywords_group.add(switchRow)
+
 
     def on_switch_change(self,widget,*data):
+
         if not self.keyword_blocked:
-            if (widget.get_active()):
-                value = "true"
-            else:
-                value = "false"
-            subprocess.Popen(["flatpak-spawn", "--host", "hyprctl", "keyword", data[1]["keyword"], value])
-            if data[1]["keyword"] not in self.hyprctl:
-                self.createActionRow(data[1]["keyword"])
-            self.updateHyprctl(data[1]["keyword"],widget.get_active())
+
+            # Run hyprctl with new value
+            value = "true" if (widget.get_active()) else "false"
+            if data[1]["value"] in self.hyprctl:
+                self.updateHyprctl(data[1]["value"],value)
+
+            self.pref_rows[data[1]["value"]] = value
+            lib.runHyprctl(data[1]["value"],value)
+
         self.keyword_blocked = False
 
-    #ColorRow
-    def createColorRow(self,pref,row,value):
-        colorRow = Adw.ActionRow()
-        colorRow.set_title(row["title"])
-        colorRow.set_subtitle(row["subtitle"])
+    # -------------------------------------------------------
+    # ColorRow
+    # -------------------------------------------------------
+    def createColorRow(self,row,value):
+
+        keyword = row["value"]
+        colorRow = lib.createActionRow(keyword,row["description"],value)
+
+        btn = Gtk.Button()
+        btn.set_valign(3)
+        btn.connect("clicked",self.toggle_keyword,colorRow,btn,keyword,row["type"])
+
+        # Add Button
+        if keyword not in self.hyprctl:
+            btn.set_icon_name("xapp-favorite-symbolic")
+            btn.set_label("Add")
+            self.options_group.add(colorRow)
+        else:
+            btn.set_icon_name("xapp-unfavorite-symbolic")
+            btn.set_label("Remove")
+            self.keywords_group.add(colorRow)
+
+        color_value = value[2:]
+        color_value = color_value[2:] + color_value[:2]
         color = Gtk.ColorDialogButton()
+        colorRow.add_prefix(btn)
         color.set_valign(3)
 
         color_rgba = Gdk.RGBA()
-        if "rgb" in value:
-            color_rgba.parse("#" + value.split("(")[1].split(")")[0])
-        else:
-            color_rgba.parse("#" + value[2:])
-
+        color_rgba.parse("#" + color_value)
         color.set_rgba(color_rgba)
+
         color_dialog = Gtk.ColorDialog()
-        color.connect("notify::rgba",self.on_color_select, row)
+        color.connect("notify::rgba",self.on_color_select,keyword,row)
         color.set_dialog(color_dialog)
+
         colorRow.add_suffix(color)
-
-        pref.add(colorRow)
-        self.pref_rows[row["keyword"]] = color
-
-    def rgb_to_hex(self, rgb):
-        r = int(rgb[0])
-        g = int(rgb[1])
-        b = int(rgb[2])
-        return f'{r:02x}{g:02x}{b:02x}'
-
-    def rgba_to_hex(self, rgba):
-        r = int(rgba[0])
-        g = int(rgba[1])
-        b = int(rgba[2])
-        a = int(float(rgba[3]) * 255)
-        # return f'{r:02x}{g:02x}{b:02x}{a:02x}'
-        return f'{r:02x}{g:02x}{b:02x}'
 
     def on_color_select(self,widget,*data):
         if not self.keyword_blocked:
             rgbaStr = widget.get_rgba().to_string()
-
             if "rgba" in rgbaStr:
                 rgbaStr = rgbaStr.replace("rgba(", "")
                 rgbaStr = rgbaStr.replace(")", "")
-                rgba_hex = "rgb(" + self.rgba_to_hex(rgbaStr.split(",")) + ")"
+                value = "0x" + lib.rgba_to_hex(rgbaStr.split(","))
             else:
                 rgbaStr = rgbaStr.replace("rgb(", "")
                 rgbaStr = rgbaStr.replace(")", "")
-                rgba_hex = "rgb(" + self.rgb_to_hex(rgbaStr.split(",")) + ")"
+                value = "0x" + lib.rgb_to_hex(rgbaStr.split(","))
 
-            if data[1]["keyword"] not in self.hyprctl:
-                self.createActionRow(data[1]["keyword"])
-            self.updateHyprctl(data[1]["keyword"],rgba_hex)
-            subprocess.Popen(["flatpak-spawn", "--host", "hyprctl", "keyword", data[1]["keyword"], rgba_hex])
+            if data[1] in self.hyprctl:
+                self.updateHyprctl(data[1],value)
+            self.pref_rows[data[1]] = value
+
+            lib.runHyprctl(data[1],value)
+
         self.keyword_blocked = False
 
-    # Update and write hyprctl.json
+    # Remove from hyprctl.json
     def removeHyptctl(self,keyword):
         result = []
         del_key = ""
@@ -320,72 +343,38 @@ class HyprlandSettingsApplication(Adw.Application):
             else:
                 del_key = k
         self.hyprctl.pop(del_key)
-        self.writeToHyprctl(result)
+        lib.writeHyprctlJson(result)
 
+    # Update hyprctl.json
     def updateHyprctl(self,keyword,value):
         result = []
         self.hyprctl[keyword] = value
         for k, v in self.hyprctl.items():
             result.append({'key': k, 'value': v})
-        self.writeToHyprctl(result)
+        lib.writeHyprctlJson(result)
 
-    def writeToHyprctl(self,result):
-        with open(self.settingsFolder + '/hyprctl.json', 'w', encoding='utf-8') as f:
-            json.dump(result, f, ensure_ascii=False, indent=4)
+    def on_help(self, widget, _):
+        subprocess.Popen(["flatpak-spawn", "--host", "xdg-open", "https://github.com/mylinuxforwork/hyprland-settings/wiki"])
 
-    # Get current keyword value
-    def getKeywordValue(self,keyword):
-        result = subprocess.Popen(["flatpak-spawn", "--host", "hyprctl", "getoption", keyword], stdout=subprocess.PIPE, text=True)
-        outcome = result.communicate()[0]
-        out_arr = outcome.split("\n")
-        value = outcome.split("\n")[0]
+    def on_check_updates(self, widget, _):
+        subprocess.Popen(["flatpak-spawn", "--host", "xdg-open", "https://github.com/mylinuxforwork/hyprland-settings/releases/latest"])
 
-        # Debug to check if keyword exits. Will break if keyword isn't available anymore
-        # print(keyword)
+    def on_report_issue(self, widget, _):
+        subprocess.Popen(["flatpak-spawn", "--host", "xdg-open", "https://github.com/mylinuxforwork/hyprland-settings/issues"])
 
-        if "int" in value:
-            int_val = value.split("int: ")[1]
-        if "float" in value:
-            float_val = value.split("float: ")[1]
-        if "custom type" in value:
-            custom_val = value.split("custom type: ")[1]
-            int_val = custom_val.split(" ")[0]
-        if (self.rowtype[keyword] == "SpinRowFloat"):
-            value = int(float(float_val)*10)
-        elif (self.rowtype[keyword] == "ColorRow"):
-            colorhex = custom_val.split(" ")[0]
-            value = colorhex
-        elif (self.rowtype[keyword] == "SwitchRow"):
-            if int_val == "1":
-                value = True
-            else:
-                value = False
-        else:
-            value = int(int_val)
-        return value
+    def on_hyprland_wiki(self, widget, _):
+        subprocess.Popen(["flatpak-spawn", "--host", "xdg-open", "https://wiki.hyprland.org/"])
 
-    # File setup
-    def runSetup(self):
-        # Create ml4w-hyprland-settings in .config folder
-        pathlib.Path(self.configFolder).mkdir(parents=True, exist_ok=True)
-        self.settingsFolder = self.configFolder
-        print(":: Using configuration in: " + self.settingsFolder)
-
-        #Update hyprctl.sh in settingsFolder
-        shutil.copy(self.path_name + '/hyprctl.sh', self.settingsFolder)
-        print(":: hyprctl.sh updated in " + self.settingsFolder)
-
-        # Create empty hyprctl.json if not exists
-        if not os.path.exists(self.settingsFolder + '/hyprctl.json'):
-            shutil.copy(self.path_name + '/hyprctl.json', self.settingsFolder)
-            print(":: hyprctl.json created in " + self.settingsFolder)
+    def on_hyprland_variables(self, widget, _):
+        subprocess.Popen(["flatpak-spawn", "--host", "xdg-open", "https://wiki.hyprland.org/Configuring/Variables/"])
 
     # Callback for the app.about action.
     def on_about_action(self, *args):
         about = Adw.AboutDialog(
             application_name="ML4W Hyprland Settings App",
+            application_icon='com.ml4w.hyprlandsettings',
             developer_name="Stephan Raabe",
-            version="1.2",
+            version="2.0",
             website="https://github.com/mylinuxforwork/hyprland-settings",
             issue_url="https://github.com/mylinuxforwork/hyprland-settings/issues",
             support_url="https://github.com/mylinuxforwork/hyprland-settings/issues",

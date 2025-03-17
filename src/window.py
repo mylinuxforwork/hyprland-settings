@@ -21,12 +21,12 @@ from gi.repository import Adw
 from gi.repository import Gtk
 
 @Gtk.Template(resource_path='/com/ml4w/hyprlandsettings/window.ui')
-class HyprlandSettingsWindow(Adw.PreferencesWindow):
+class HyprlandSettingsWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'Ml4wHyprlandSettingsWindow'
 
-    settings_page = Gtk.Template.Child()
-    options_page = Gtk.Template.Child()
     keywords_group = Gtk.Template.Child()
+    novariables = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
