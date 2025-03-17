@@ -47,15 +47,24 @@ class HyprlandSettingsApplication(Adw.Application):
     hyprctl = {} # hyprctl dictionary synced with hyprctlfile
     rowtype = {} # rowtype dictionary for keywords
     action_rows = {} # Dictionary for action row objects
+    pref_rows = {} # Dictionary for variables + value
+
+    # List Stores
+    hyprvariablestore = Gio.ListStore()
 
     keyword_blocked = False # Temp Status of removing a keyword
-
     def __init__(self):
         super().__init__(application_id='com.ml4w.hyprlandsettings',
                          flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
         self.create_action('settings', self.on_settings_action)
+
+        self.create_action('hyprland_wiki', self.on_hyprland_wiki)
+        self.create_action('hyprland_variables', self.on_hyprland_variables)
+        self.create_action('help', self.on_help)
+        self.create_action('report_issue', self.on_report_issue)
+        self.create_action('check_updates', self.on_check_updates)
 
         # Setup Configuration
         lib.runSetup()
@@ -69,8 +78,10 @@ class HyprlandSettingsApplication(Adw.Application):
         if not win:
             win = HyprlandSettingsWindow(application=self)
         self.win_settings = HyprlandKeywordsSettings()
-        self.win_settings.set_modal(True)
-        self.win_settings.set_hide_on_close(True)
+        # self.props.active_window.hyprvariables_set_list.bind_model(self.hyprvariablestore,self.create_hyprvariable_row)
+
+        # Show main window
+        win.present()
 
         # Get pages
         self.options_group = self.win_settings.keywords_group
@@ -78,16 +89,26 @@ class HyprlandSettingsApplication(Adw.Application):
         # get groups
         self.keywords_group = win.keywords_group
 
+        # novariables
+        self.novariables = win.novariables
+
         thread = threading.Thread(target=self.initUI)
         thread.daemon = True
         thread.start()
 
-        # Show main window
-        win.present()
 
     # Open Settings Window
     def on_settings_action(self, *args):
-        self.win_settings.present()
+        self.win_settings.present(self.props.active_window)
+        self.win_settings.set_search_enabled(True)
+
+    def check_novariables(self):
+        if len(self.hyprctl) > 0:
+            self.keywords_group.set_visible(True)
+            self.novariables.set_visible(False)
+        else:
+            self.keywords_group.set_visible(False)
+            self.novariables.set_visible(True)
 
     # Initialization of the UI
     def initUI(self):
@@ -95,10 +116,14 @@ class HyprlandSettingsApplication(Adw.Application):
         # Get hyprctl dictionary from hyprctl.json
         self.hyprctl = lib.getHyprctlDictionary()
 
+        self.check_novariables()
+
         # Load hyprctl descriptions
         config_json = lib.getHyprctlDescriptions()
 
+        counter = 0
         # Create Rows
+
         for i in config_json:
 
             # Fill rowtype dictionary
@@ -108,14 +133,16 @@ class HyprlandSettingsApplication(Adw.Application):
             if i["value"] not in self.hyprctl:
                 value = lib.getKeywordValue(i["value"],self.rowtype)
             else:
-                if (i["type"] == "SpinRowFloat"):
-                    value = self.hyprctl[i["value"]]
-                else:
-                    value = self.hyprctl[i["value"]]
+                value = self.hyprctl[i["value"]]
+                # print("Set " + i["value"] + ": " + value)
+
+            # Fill with all keywords and values
+            self.pref_rows[i["value"]] = value
 
             # Check for invalid option
             if value != "no such option":
 
+                counter = counter + 1
                 # Create rows
                 if i["type"] == 1:
                     self.createSpinRow(i,value)
@@ -123,7 +150,7 @@ class HyprlandSettingsApplication(Adw.Application):
                     self.createSpinRow(i,value)
                 elif i["type"] == 0:
                     self.createSwitchRow(i,value)
-                elif i["type"] == "ColorRow":
+                elif i["type"] == 7:
                     self.createColorRow(i,value)
 
     # Toggle keyword between options and keywords group
@@ -131,25 +158,26 @@ class HyprlandSettingsApplication(Adw.Application):
 
         if rtype == 0:
             value = "1" if (row.get_active()) else "0"
+        elif rtype == 7:
+            value = self.pref_rows[keyword]
         else:
             value = round(row.get_value(), 2)
 
         if btn.get_label() == "Add":
-
             # Add keyword to hyprctl.json
-            self.updateHyprctl(keyword,value)
-
+            self.updateHyprctl(keyword,self.pref_rows[keyword])
             self.options_group.remove(row)
             self.keywords_group.add(row)
             btn.set_label("Remove")
         else:
-
             # Remove keyword from hyprctl.json
             self.removeHyptctl(keyword)
-
             btn.set_label("Add")
             self.keywords_group.remove(row)
             self.options_group.add(row)
+            lib.reloadHyprctl()
+
+        self.check_novariables()
 
     # -------------------------------------------------------
     # SpinRow
@@ -200,6 +228,8 @@ class HyprlandSettingsApplication(Adw.Application):
                 # Update hyprctl.json
                 self.updateHyprctl(keyword,value)
 
+            self.pref_rows[keyword] = value
+
             # Run hyprctl with new value
             lib.runHyprctl(keyword,value)
 
@@ -237,7 +267,10 @@ class HyprlandSettingsApplication(Adw.Application):
 
             # Run hyprctl with new value
             value = "true" if (widget.get_active()) else "false"
-            self.updateHyprctl(data[1]["value"],value)
+            if data[1]["value"] in self.hyprctl:
+                self.updateHyprctl(data[1]["value"],value)
+
+            self.pref_rows[data[1]["value"]] = value
             lib.runHyprctl(data[1]["value"],value)
 
         self.keyword_blocked = False
@@ -246,44 +279,58 @@ class HyprlandSettingsApplication(Adw.Application):
     # ColorRow
     # -------------------------------------------------------
     def createColorRow(self,row,value):
-        colorRow = Adw.ActionRow()
-        colorRow.set_title(row["title"])
-        colorRow.set_subtitle(row["subtitle"])
+
+        keyword = row["value"]
+        colorRow = lib.createActionRow(keyword,row["description"],value)
+
+        btn = Gtk.Button()
+        btn.set_valign(3)
+        btn.connect("clicked",self.toggle_keyword,colorRow,btn,keyword,row["type"])
+
+        # Add Button
+        if keyword not in self.hyprctl:
+            btn.set_icon_name("xapp-favorite-symbolic")
+            btn.set_label("Add")
+            self.options_group.add(colorRow)
+        else:
+            btn.set_icon_name("xapp-unfavorite-symbolic")
+            btn.set_label("Remove")
+            self.keywords_group.add(colorRow)
+
+        color_value = value[2:]
+        color_value = color_value[2:] + color_value[:2]
         color = Gtk.ColorDialogButton()
+        colorRow.add_prefix(btn)
         color.set_valign(3)
 
         color_rgba = Gdk.RGBA()
-        if "rgb" in value:
-            color_rgba.parse("#" + value.split("(")[1].split(")")[0])
-        else:
-            color_rgba.parse("#" + value[2:])
-
+        color_rgba.parse("#" + color_value)
         color.set_rgba(color_rgba)
-        color_dialog = Gtk.ColorDialog()
-        color.connect("notify::rgba",self.on_color_select, row)
-        color.set_dialog(color_dialog)
-        colorRow.add_suffix(color)
 
-        pref.add(colorRow)
-        self.pref_rows[row["keyword"]] = color
+        color_dialog = Gtk.ColorDialog()
+        color.connect("notify::rgba",self.on_color_select,keyword,row)
+        color.set_dialog(color_dialog)
+
+        colorRow.add_suffix(color)
 
     def on_color_select(self,widget,*data):
         if not self.keyword_blocked:
             rgbaStr = widget.get_rgba().to_string()
-
             if "rgba" in rgbaStr:
                 rgbaStr = rgbaStr.replace("rgba(", "")
                 rgbaStr = rgbaStr.replace(")", "")
-                rgba_hex = "rgb(" + lib.rgba_to_hex(rgbaStr.split(",")) + ")"
+                value = "0x" + lib.rgba_to_hex(rgbaStr.split(","))
             else:
                 rgbaStr = rgbaStr.replace("rgb(", "")
                 rgbaStr = rgbaStr.replace(")", "")
-                rgba_hex = "rgb(" + lib.rgb_to_hex(rgbaStr.split(",")) + ")"
+                value = "0x" + lib.rgb_to_hex(rgbaStr.split(","))
 
-            if data[1]["keyword"] not in self.hyprctl:
-                self.createActionRow(data[1]["keyword"])
-            self.updateHyprctl(data[1]["keyword"],rgba_hex)
-            lib.runHyprctl(data[1]["keyword"], rgba_hex)
+            if data[1] in self.hyprctl:
+                self.updateHyprctl(data[1],value)
+            self.pref_rows[data[1]] = value
+
+            lib.runHyprctl(data[1],value)
+
         self.keyword_blocked = False
 
     # Remove from hyprctl.json
@@ -306,12 +353,28 @@ class HyprlandSettingsApplication(Adw.Application):
             result.append({'key': k, 'value': v})
         lib.writeHyprctlJson(result)
 
+    def on_help(self, widget, _):
+        subprocess.Popen(["flatpak-spawn", "--host", "xdg-open", "https://github.com/mylinuxforwork/hyprland-settings/wiki"])
+
+    def on_check_updates(self, widget, _):
+        subprocess.Popen(["flatpak-spawn", "--host", "xdg-open", "https://github.com/mylinuxforwork/hyprland-settings/releases/latest"])
+
+    def on_report_issue(self, widget, _):
+        subprocess.Popen(["flatpak-spawn", "--host", "xdg-open", "https://github.com/mylinuxforwork/hyprland-settings/issues"])
+
+    def on_hyprland_wiki(self, widget, _):
+        subprocess.Popen(["flatpak-spawn", "--host", "xdg-open", "https://wiki.hyprland.org/"])
+
+    def on_hyprland_variables(self, widget, _):
+        subprocess.Popen(["flatpak-spawn", "--host", "xdg-open", "https://wiki.hyprland.org/Configuring/Variables/"])
+
     # Callback for the app.about action.
     def on_about_action(self, *args):
         about = Adw.AboutDialog(
             application_name="ML4W Hyprland Settings App",
+            application_icon='com.ml4w.hyprlandsettings',
             developer_name="Stephan Raabe",
-            version="1.1",
+            version="2.0",
             website="https://github.com/mylinuxforwork/hyprland-settings",
             issue_url="https://github.com/mylinuxforwork/hyprland-settings/issues",
             support_url="https://github.com/mylinuxforwork/hyprland-settings/issues",

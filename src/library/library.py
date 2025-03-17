@@ -86,7 +86,7 @@ class Library:
         r = int(rgb[0])
         g = int(rgb[1])
         b = int(rgb[2])
-        return f'{r:02x}{g:02x}{b:02x}'
+        return f'ff{r:02x}{g:02x}{b:02x}'
 
     # Converts rgba to hex
     def rgba_to_hex(self, rgba):
@@ -94,7 +94,7 @@ class Library:
         g = int(rgba[1])
         b = int(rgba[2])
         a = int(float(rgba[3]) * 255)
-        return f'{r:02x}{g:02x}{b:02x}'
+        return f'{a:02x}{r:02x}{g:02x}{b:02x}'
 
     # Run application setup
     def runSetup(self):
@@ -162,10 +162,10 @@ class Library:
         adjust.set_step_increment(step)
         return adjust
 
-    def createActionRow(self,group,title):
+    def createActionRow(self,title,description,value):
         actionRow = Adw.ActionRow()
         actionRow.set_title(title)
-        group.add(actionRow)
+        actionRow.set_subtitle(description)
         return actionRow
 
     # Get current keyword value
@@ -175,28 +175,35 @@ class Library:
         # Check if option exists
         if value != "no such option":
             if "int" in value:
-                int_val = value.split("int: ")[1]
+                custom_val = value.split("int: ")[1]
             elif "float" in value:
-                float_val = value.split("float: ")[1]
+                custom_val = value.split("float: ")[1]
             elif "custom type" in value:
-                custom_val = value.split("custom type: ")[1]
-                int_val = custom_val.split(" ")[0]
+                if "col" in keyword:
+                    custom_val = value.split("custom type: ")[1]
+                    custom_val = "0x" + custom_val.split(" ")[0]
+                else:
+                    custom_val = value.split("custom type: ")[1]
+                    custom_val = custom_val.split(" ")[0]
 
             if rowtype[keyword] == 0:
-                if int_val == "1":
+                if custom_val == "1":
                     value = True
                 else:
                     value = False
 
             if rowtype[keyword] == 1:
                 if "int" in value:
-                    value = int_val
+                    value = custom_val
                 else:
                     value = "no such option"
 
+            if rowtype[keyword] == 7:
+                value = custom_val
+
             if rowtype[keyword] == 2:
                 if "float" in value:
-                    value = float(float_val)
+                    value = float(custom_val)
                 else:
                     value = "no such option"
 

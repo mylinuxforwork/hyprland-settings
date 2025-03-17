@@ -30,7 +30,7 @@ hyprland_settings_sources = [
   '__init__.py',
   'main.py',
   'window.py',
-  'settings.py'
+  'settings.py',
 ]
 
 install_data(hyprland_settings_sources, install_dir: moduledir)

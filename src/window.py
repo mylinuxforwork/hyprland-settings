@@ -25,6 +25,8 @@ class HyprlandSettingsWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'Ml4wHyprlandSettingsWindow'
 
     keywords_group = Gtk.Template.Child()
+    novariables = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
