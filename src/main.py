@@ -52,6 +52,9 @@ class HyprlandSettingsApplication(Adw.Application):
     # List Stores
     hyprvariablestore = Gio.ListStore()
 
+    # Supported Types
+    supported_types = [0,1,2,7]
+
     keyword_blocked = False # Temp Status of removing a keyword
     def __init__(self):
         super().__init__(application_id='com.ml4w.hyprlandsettings',
@@ -115,43 +118,40 @@ class HyprlandSettingsApplication(Adw.Application):
 
         # Get hyprctl dictionary from hyprctl.json
         self.hyprctl = lib.getHyprctlDictionary()
-
         self.check_novariables()
 
         # Load hyprctl descriptions
         config_json = lib.getHyprctlDescriptions()
 
-        counter = 0
         # Create Rows
-
+        counter = 0
         for i in config_json:
+            if i["type"] in self.supported_types:
+                # Fill rowtype dictionary
+                self.rowtype[i["value"]] = i["type"]
 
-            # Fill rowtype dictionary
-            self.rowtype[i["value"]] = i["type"]
+                # Get row values
+                if i["value"] not in self.hyprctl:
+                    value = lib.getKeywordValue(i["value"],self.rowtype)
+                else:
+                    value = self.hyprctl[i["value"]]
+                    # print("Set " + i["value"] + ": " + value)
 
-            # Get row values
-            if i["value"] not in self.hyprctl:
-                value = lib.getKeywordValue(i["value"],self.rowtype)
-            else:
-                value = self.hyprctl[i["value"]]
-                # print("Set " + i["value"] + ": " + value)
+                # Fill with all keywords and values
+                self.pref_rows[i["value"]] = value
 
-            # Fill with all keywords and values
-            self.pref_rows[i["value"]] = value
-
-            # Check for invalid option
-            if value != "no such option":
-
-                counter = counter + 1
-                # Create rows
-                if i["type"] == 1:
-                    self.createSpinRow(i,value)
-                elif i["type"] == 2:
-                    self.createSpinRow(i,value)
-                elif i["type"] == 0:
-                    self.createSwitchRow(i,value)
-                elif i["type"] == 7:
-                    self.createColorRow(i,value)
+                # Check for invalid option
+                if value != "no such option":
+                    counter = counter + 1
+                    match i["type"]:
+                        case 0:
+                            self.createSwitchRow(i,value)
+                        case 1:
+                            self.createSpinRow(i,value)
+                        case 2:
+                            self.createSpinRow(i,value)
+                        case 7:
+                            self.createColorRow(i,value)
 
     # Toggle keyword between options and keywords group
     def toggle_keyword(self,widget,row,btn,keyword,rtype):
