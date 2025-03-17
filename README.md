@@ -2,7 +2,9 @@
 
 This applications supports you to customize your Hyprland installation. You can overwrite the existing configuration with custom values without adding complex configuration files.
 
-![image](https://github.com/user-attachments/assets/dd1eb200-ccfe-46d6-8137-de6b10abf0b9)
+![image](https://github.com/user-attachments/assets/6f56dbc8-9db5-445e-81df-b4156473b397)
+
+![image](https://github.com/user-attachments/assets/3688f2ef-47fe-49ff-b45a-eef4c39c043a)
 
 # Requirements
 
