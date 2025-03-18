@@ -1,63 +1,137 @@
 #!/bin/bash
-runtime="org.gnome.Platform/x86_64/47"
-app="com.ml4w.hyprlandsettings"
-download="https://github.com/mylinuxforwork/hyprland-settings/releases/latest/download/$app.flatpak"
+# Created with Packages Installer 0.5
+# https://github.com/mylinuxforwork/packages-installer
 
-_commandExists() {
-    package="$1"
-    if ! type $package >/dev/null 2>&1; then
-        echo 1
-    else
-        echo 0
-    fi
+clear
+# Seperator
+_sep() {
+	echo "----------------------------------------------------"
 }
 
-_checkFlatpakAppExists() {
-	app="$1"
-	flatpak_output=$(flatpak info $runtime)
-	if [[ $flatpak_output == *"ID:"* ]]; then
+# Spacer
+_space() {
+	echo
+}
+
+# Default
+assumeyes=1
+cmdoutput=1
+
+# Options
+while getopts y?h?o? option
+do
+    case "${option}"
+        in
+        y|\?)
+	        assumeyes=0
+        	;;
+        o|\?)
+	        cmdoutput=0
+        	;;
+        h|\?)
+		echo "Created with Packages Installer"
+		echo
+		echo "Usage:"
+		echo "-y Skip confirmation"
+		echo "-o Show installation command outputs"
+		echo "-h Help"
+		exit
+        	;;
+    esac
+done
+
+# Variables
+
+
+# Is installed
+_isInstalled_flatpak() {
+	package="$1"
+	check=$(flatpak info ${package})
+	if [[ $check == *"ID:"* ]]; then
 	  	echo 0
 	else
 		echo 1
 	fi
 }
 
-# Check for flatpak
-if [ "$(_commandExists "flatpak")" == "1" ]; then
-	echo "ERROR: Please install flatpak first."
-	exit
+# Add flathub remote
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo > /dev/null 2>&1
+
+
+# Header
+_sep
+echo "Hyprland Settings App"
+echo "Installation script for the ML4W Hyprland Settings App"
+_space
+echo "Created with Packages Installer"
+_sep
+_space
+echo "IMPORTANT: Please make sure that your system is updated before starting the installation."
+_space
+
+# Confirm Start
+if [ $assumeyes == 1 ]; then
+	while true; do
+		read -p "DO YOU WANT TO START THE INSTALLATION NOW? (Yy/Nn): " yn
+		case $yn in
+		    [Yy]*)
+		        break
+		        ;;
+		    [Nn]*)
+		        echo ":: Installation canceled"
+		        exit
+		        break
+		        ;;
+		    *)
+		        echo ":: Please answer yes or no."
+		        ;;
+		esac
+	done
 fi
 
-# Adding flathub remote
-flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+# sudo permissions
+sudo -v
+_space
 
-# Check for runtime
-if [ "$(_checkFlatpakAppExists "$runtime")" == "1" ]; then
-	echo
-	echo ":: Installing runtime $runtime"
-	sudo flatpak -y install $runtime
+# Packages
+check_isinstalled="True"
+if [ $check_isinstalled == "true" ]; then
+	if [[ $(_isInstalled_apt "org.gnome.Platform/x86_64/47") == 0 ]]; then
+		echo ":: org.gnome.Platform/x86_64/47 is already installed"
+	else
+		echo ":: Installing org.gnome.Platform/x86_64/47..."
+		if [ $cmdoutput == 1 ]; then
+			flatpak -y install "org.gnome.Platform/x86_64/47" > /dev/null 2>&1
+		else
+			flatpak -y install "org.gnome.Platform/x86_64/47"
+		fi
+	fi
+else
+	echo ":: Installing org.gnome.Platform/x86_64/47..."
+	if [ $cmdoutput == 1 ]; then
+		flatpak -y --reinstall install "org.gnome.Platform/x86_64/47" > /dev/null 2>&1
+	else
+		flatpak -y --reinstall install "org.gnome.Platform/x86_64/47"
+	fi
 fi
 
-# Download app
-echo
-echo ":: Downloading $app"
-if [ ! -d "$HOME/.cache" ]; then
-	mkdir -p "$HOME/.cache"
+if [ ! -d $HOME/.cache ]; then
+	mkdir -p $HOME/.cache
 fi
-if [ -f "$HOME/.cache/$app.flatpak" ]; then
-	rm "$HOME/.cache/$app.flatpak"
-fi
-wget -P "$HOME/.cache" "$download"
-
-# Install app
+wget -q -P "$HOME/.cache" "https://github.com/mylinuxforwork/hyprland-settings/releases/latest/download/com.ml4w.hyprlandsettings.flatpak"
 cd "$HOME/.cache"
-flatpak --user -y --reinstall install $app.flatpak
-
-# Cleanup
-if [ -f "$HOME/.cache/$app.flatpak" ]; then
-	rm "$HOME/.cache/$app.flatpak"
+echo ":: Installing com.ml4w.hyprlandsettings.flatpak"
+if [ $cmdoutput == 1 ]; then
+	flatpak --user -y --reinstall install com.ml4w.hyprlandsettings.flatpak > /dev/null 2>&1
+else
+	flatpak --user -y --reinstall install com.ml4w.hyprlandsettings.flatpak
 fi
+rm "$HOME/.cache/com.ml4w.hyprlandsettings.flatpak"
 
-# Finishing up
-echo
-echo ":: Setup complete. Run the app with flatpak run $app"
+
+_space
+
+# Success Message
+_sep
+echo "Done!"
+_sep

@@ -1,8 +1,8 @@
 # ML4W Hyprland Settings App
 
-This applications supports you to customize your Hyprland installation. You can overwrite the existing configuration with custom values without adding complex configuration files. 
+This applications supports you to customize your Hyprland installation. You can overwrite the existing configuration with custom values without editing complex configuration files. 
 
-The ML4W Hyprland Settings App utilize hyprctl. It is a utility for controlling some parts of the compositor from a CLI or a script. 
+The ML4W Hyprland Settings App utilizes hyprctl. It is a utility for controlling some parts of the compositor from a CLI or a script. 
 
 ![image](https://github.com/user-attachments/assets/6f56dbc8-9db5-445e-81df-b4156473b397)
 
@@ -18,29 +18,32 @@ The ML4W Hyprland Settings App requires Flatpak:
 
 ```
 
-Copy the following command into your terminal your terminal.
+Copy the following command into your terminal.
 
 ```
 bash <(curl -s https://raw.githubusercontent.com/mylinuxforwork/hyprland-settings/master/setup.sh)
 ```
 
-After the installation you can start the app from your application launcher or with:
+After the installation you can start the app from your application launcher or with the command:
 
 ```
 flatpak run com.ml4w.hyprlandsettings
 ```
 
-To restore the changes after every login into Hyprland, please add the following line to your hyprland.conf
+# Load changes after login
+
+To load your changes after every login into Hyprland, please add the following line to your hyprland.conf
 
 ```
 exec = ~/.config/com.ml4w.hyprlandsettings/hyprctl.sh
 ```
+
 # Update
 
 Just run the installation again.
 
 # Configuration
 
-In the folder ~/.config/com.ml4whyprlandsettings, you will find the stored values that you have set with the app.
+In the folder ~/.config/com.ml4w.hyprlandsettings, you will find the stored values that you have set with the app.
 
 
