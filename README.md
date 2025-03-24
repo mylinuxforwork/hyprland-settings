@@ -21,7 +21,7 @@ The ML4W Hyprland Settings App requires Flatpak:
 Copy the following command into your terminal.
 
 ```
-curl -s https://raw.githubusercontent.com/mylinuxforwork/packages-installer/main/setup.sh | bash -s -- -p flatpak -s https://raw.githubusercontent.com/mylinuxforwork/dotfiles-sidebar/master/com.ml4w.sidebar.pkginst com.ml4w.sidebar
+curl -s https://raw.githubusercontent.com/mylinuxforwork/packages-installer/main/setup.sh | bash -s -- -p flatpak -s https://raw.githubusercontent.com/mylinuxforwork/hyprland-settings/master/com.ml4w.hyprlandsettings.pkginst com.ml4w.hyprlandsettings
 ```
 > The installation is build with ML4W Packages Installer. https://github.com/mylinuxforwork/packages-installer
 
