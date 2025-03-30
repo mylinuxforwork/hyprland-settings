@@ -127,6 +127,9 @@ class HyprlandSettingsApplication(Adw.Application):
         counter = 0
         for i in config_json:
             if i["type"] in self.supported_types:
+
+                # print(i["value"] + ": " + str(i["type"]))
+
                 # Fill rowtype dictionary
                 self.rowtype[i["value"]] = i["type"]
 
@@ -374,7 +377,7 @@ class HyprlandSettingsApplication(Adw.Application):
             application_name="ML4W Hyprland Settings App",
             application_icon='com.ml4w.hyprlandsettings',
             developer_name="Stephan Raabe",
-            version="2.0",
+            version="2.1",
             website="https://github.com/mylinuxforwork/hyprland-settings",
             issue_url="https://github.com/mylinuxforwork/hyprland-settings/issues",
             support_url="https://github.com/mylinuxforwork/hyprland-settings/issues",

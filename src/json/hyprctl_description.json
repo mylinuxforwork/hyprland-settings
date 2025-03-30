@@ -393,7 +393,7 @@
     }
 },
 {
-    "value": "blur:enabled",
+    "value": "decoration:blur:enabled",
     "description": "enable kawase window background blur",
     "type": 0,
     "flags": 0,
@@ -402,7 +402,7 @@
     }
 },
 {
-    "value": "blur:size",
+    "value": "decoration:blur:size",
     "description": "blur size (distance)",
     "type": 1,
     "flags": 0,
@@ -413,7 +413,7 @@
     }
 },
 {
-    "value": "blur:passes",
+    "value": "decoration:blur:passes",
     "description": "the amount of passes to perform",
     "type": 1,
     "flags": 0,
@@ -424,7 +424,7 @@
     }
 },
 {
-    "value": "blur:ignore_opacity",
+    "value": "decoration:blur:ignore_opacity",
     "description": "make the blur layer ignore the opacity of the window",
     "type": 0,
     "flags": 0,
@@ -433,7 +433,7 @@
     }
 },
 {
-    "value": "blur:new_optimizations",
+    "value": "decoration:blur:new_optimizations",
     "description": "whether to enable further optimizations to the blur. Recommended to leave on, as it will massively improve performance.",
     "type": 0,
     "flags": 0,
@@ -442,7 +442,7 @@
     }
 },
 {
-    "value": "blur:xray",
+    "value": "decoration:blur:xray",
     "description": "if enabled, floating windows will ignore tiled windows in their blur. Only available if blur_new_optimizations is true. Will reduce overhead on floating blur significantly.",
     "type": 0,
     "flags": 0,
@@ -451,7 +451,7 @@
     }
 },
 {
-    "value": "blur:noise",
+    "value": "decoration:blur:noise",
     "description": "how much noise to apply. [0.0 - 1.0]",
     "type": 2,
     "flags": 0,
@@ -462,7 +462,7 @@
     }
 },
 {
-    "value": "blur:contrast",
+    "value": "decoration:blur:contrast",
     "description": "contrast modulation for blur. [0.0 - 2.0]",
     "type": 2,
     "flags": 0,
@@ -473,7 +473,7 @@
     }
 },
 {
-    "value": "blur:brightness",
+    "value": "decoration:blur:brightness",
     "description": "brightness modulation for blur. [0.0 - 2.0]",
     "type": 2,
     "flags": 0,
@@ -484,7 +484,7 @@
     }
 },
 {
-    "value": "blur:vibrancy",
+    "value": "decoration:blur:vibrancy",
     "description": "Increase saturation of blurred colors. [0.0 - 1.0]",
     "type": 2,
     "flags": 0,
@@ -495,7 +495,7 @@
     }
 },
 {
-    "value": "blur:vibrancy_darkness",
+    "value": "decoration:blur:vibrancy_darkness",
     "description": "How strong the effect of vibrancy is on dark areas . [0.0 - 1.0]",
     "type": 2,
     "flags": 0,
@@ -506,7 +506,7 @@
     }
 },
 {
-    "value": "blur:special",
+    "value": "decoration:blur:special",
     "description": "whether to blur behind the special workspace (note: expensive)",
     "type": 0,
     "flags": 0,
@@ -515,7 +515,7 @@
     }
 },
 {
-    "value": "blur:popups",
+    "value": "decoration:blur:popups",
     "description": "whether to blur popups (e.g. right-click menus)",
     "type": 0,
     "flags": 0,
@@ -524,7 +524,7 @@
     }
 },
 {
-    "value": "blur:popups_ignorealpha",
+    "value": "decoration:blur:popups_ignorealpha",
     "description": "works like ignorealpha in layer rules. If pixel opacity is below set value, will not blur. [0.0 - 1.0]",
     "type": 2,
     "flags": 0,
@@ -535,7 +535,7 @@
     }
 },
 {
-    "value": "blur:input_methods",
+    "value": "decoration:blur:input_methods",
     "description": "whether to blur input methods (e.g. fcitx5)",
     "type": 0,
     "flags": 0,
@@ -544,7 +544,7 @@
     }
 },
 {
-    "value": "blur:input_methods_ignorealpha",
+    "value": "decoration:blur:input_methods_ignorealpha",
     "description": "works like ignorealpha in layer rules. If pixel opacity is below set value, will not blur. [0.0 - 1.0]",
     "type": 2,
     "flags": 0,
