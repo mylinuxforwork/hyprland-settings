@@ -28,7 +28,7 @@ curl -s https://raw.githubusercontent.com/mylinuxforwork/packages-installer/main
 ## Uninstall
 
 ```
-flatpak uninstall com.ml4w.sidebar
+flatpak uninstall com.ml4w.hyprlandsettings
 ```
 
 ## Run the application
