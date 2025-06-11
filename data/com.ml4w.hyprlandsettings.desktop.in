@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=ML4W Hyprland Setting App
+Name=Hyprland Settings
 Exec=hyprland-settings
 Icon=com.ml4w.hyprlandsettings
 Terminal=false
