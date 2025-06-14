@@ -4,20 +4,20 @@
 # Flatpak Information
 # ----------------------------------------------------------
 
-runtime="org.gnome.Platform/x86_64/47"
 app="com.ml4w.hyprlandsettings"
-download="https://github.com/mylinuxforwork/hyprland-settings/releases/latest/download/$app.flatpak"
+public_key="ml4w-apps-public-key.asc"
+public_key_url="https://mylinuxforwork.github.io/ml4w-flatpak-repo/$public_key"
 
 # ----------------------------------------------------------
 # Check if command exists
 # ----------------------------------------------------------
 
 _commandExists() {
-    package="$1"
+    local package="$1"
     if ! type $package >/dev/null 2>&1; then
-        echo 1
+        return 1
     else
-        echo 0
+        return 0
     fi
 }
 
@@ -26,70 +26,99 @@ _commandExists() {
 # ----------------------------------------------------------
 
 _checkFlatpakAppExists() {
-	app="$1"
-	flatpak_output=$(flatpak info $runtime)
+	local app="$1"
+	flatpak_output=$(flatpak info $app)
 	if [[ $flatpak_output == *"ID:"* ]]; then
-	  	echo 0
+	  	return 0
 	else
-		echo 1
+		return 1
 	fi
+}
+
+# ----------------------------------------------------------
+# Check if flatpak repo is installed
+# ----------------------------------------------------------
+
+is_flatpak_repo_installed() {
+  local repo_name="$1"
+  flatpak_output=$(flatpak remotes)
+  if [[ $flatpak_output == *"$repo_name"* ]]; then
+    return 0
+  else
+    return 1
+  fi
 }
 
 # ----------------------------------------------------------
 # Check if flatpak is already installed
 # ----------------------------------------------------------
 
-if [ "$(_commandExists "flatpak")" == "1" ]; then
+if ! _commandExists "flatpak"; then
 	echo "ERROR: Please install flatpak first."
 	exit
 fi
 
 # ----------------------------------------------------------
-# Adding flathub remote
+# Check if wget is already installed
 # ----------------------------------------------------------
 
-flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-
-# ----------------------------------------------------------
-# Check for runtime
-# ----------------------------------------------------------
-
-if [ "$(_checkFlatpakAppExists "$runtime")" == "1" ]; then
-	echo
-	echo ":: Installing runtime $runtime"
-	sudo flatpak -y install $runtime
-fi
-
-# ----------------------------------------------------------
-# Download app
-# ----------------------------------------------------------
-
-echo
-echo ":: Downloading $app"
-if [ ! -d "$HOME/.cache" ]; then
-	mkdir -p "$HOME/.cache"
-fi
-if [ -f "$HOME/.cache/$app.flatpak" ]; then
-	rm "$HOME/.cache/$app.flatpak"
-fi
-wget -P "$HOME/.cache" "$download"
-if [ ! -f "$HOME/.cache/$app.flatpak" ]; then
-	echo "ERROR: Download of $app.flatpak failed."
+if ! _commandExists "wget"; then
+	echo "ERROR: Please install wget first."
 	exit
 fi
+
+# ----------------------------------------------------------
+# Adding flathub
+# ----------------------------------------------------------
+
+if is_flatpak_repo_installed "flathub"; then
+	echo ":: flathub is already added."
+else
+	echo ":: Adding flathub"
+	flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+fi
+
+# ----------------------------------------------------------
+# Adding ml4w-repo
+# ----------------------------------------------------------
+
+if is_flatpak_repo_installed "ml4w-repo"; then
+	echo ":: ml4w-repo is already added."
+else
+	echo ":: Downloading Public Key"
+	if [ ! -d "$HOME/.cache" ]; then
+		mkdir -p "$HOME/.cache"
+	fi
+	if [ -f "$HOME/.cache/$public_key" ]; then
+		rm "$HOME/.cache/$public_key"
+	fi
+	wget -P "$HOME/.cache" "$public_key_url"
+	if [ ! -f "$HOME/.cache/$public_key" ]; then
+		echo "ERROR: Download of Public Key failed."
+		exit
+	fi	
+	echo ":: Adding ml4w-repo"
+	flatpak remote-add --user --if-not-exists ml4w-repo https://mylinuxforwork.github.io/ml4w-flatpak-repo/ml4w-apps.flatpakrepo --gpg-import=$HOME/.cache/$public_key
+fi
+
 # ----------------------------------------------------------
 # Install app
 # ----------------------------------------------------------
 
-cd "$HOME/.cache"
-flatpak --user -y --reinstall install $app.flatpak
+if _checkFlatpakAppExists "$app"; then
+	echo ":: $app is already installed"
+	exit
+else
+	echo ":: Installing $app"
+	flatpak -y install --user ml4w-repo $app
+fi
 
 # ----------------------------------------------------------
 # Cleanup
 # ----------------------------------------------------------
 
-if [ -f "$HOME/.cache/$app.flatpak" ]; then
-	rm "$HOME/.cache/$app.flatpak"
+if [ -f "$HOME/.cache/$public_key" ]; then
+	rm "$HOME/.cache/$public_key"
 fi
 
 # ----------------------------------------------------------
