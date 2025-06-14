@@ -22,20 +22,6 @@ _commandExists() {
 }
 
 # ----------------------------------------------------------
-# Check if app is already installed
-# ----------------------------------------------------------
-
-_checkFlatpakAppExists() {
-	local app="$1"
-	flatpak_output=$(flatpak info $app)
-	if [[ $flatpak_output == *"ID:"* ]]; then
-	  	return 0
-	else
-		return 1
-	fi
-}
-
-# ----------------------------------------------------------
 # Check if flatpak repo is installed
 # ----------------------------------------------------------
 
@@ -105,13 +91,8 @@ fi
 # Install app
 # ----------------------------------------------------------
 
-if _checkFlatpakAppExists "$app"; then
-	echo ":: $app is already installed"
-	exit
-else
-	echo ":: Installing $app"
-	flatpak -y install --user ml4w-repo $app
-fi
+echo ":: Installing $app"
+flatpak -y install --reinstall --user ml4w-repo $app
 
 # ----------------------------------------------------------
 # Cleanup
