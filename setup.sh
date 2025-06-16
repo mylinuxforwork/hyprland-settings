@@ -22,20 +22,6 @@ _commandExists() {
 }
 
 # ----------------------------------------------------------
-# Check if flatpak app
-# ----------------------------------------------------------
-
-_checkFlatpakAppExists() {
-	local app="$1"
-	flatpak_output=$(flatpak info $app)
-	if [[ $flatpak_output == *"ID:"* ]]; then
-	  	return 0
-	else
-		return 1
-	fi
-}
-
-# ----------------------------------------------------------
 # Check if flatpak repo is installed
 # ----------------------------------------------------------
 
