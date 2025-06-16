@@ -21,8 +21,6 @@
 {
     "value": "general:gaps_in",
     "description": "gaps between windows supports css style gaps (top, right, bottom, left -> 5 10 15 20)",
-
-
     "type": 3,
     "flags": 0,
     "data": {
@@ -32,8 +30,6 @@
 {
     "value": "general:gaps_out",
     "description": "gaps between windows css style gaps (top, right, bottom, left -> 5 10 15 20)",
-
-
     "type": 3,
     "flags": 0,
     "data": {

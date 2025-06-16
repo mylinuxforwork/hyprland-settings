@@ -207,4 +207,10 @@ class Library:
                 else:
                     value = "no such option"
 
+            if rowtype[keyword] == 3:
+                if "custom" in value:
+                    value = value.split(" ")[2]
+                else:
+                    value = "no such option"
+
         return value

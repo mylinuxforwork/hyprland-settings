@@ -53,7 +53,7 @@ class HyprlandSettingsApplication(Adw.Application):
     hyprvariablestore = Gio.ListStore()
 
     # Supported Types
-    supported_types = [0,1,2,7]
+    supported_types = [0,1,2,3,7]
 
     keyword_blocked = False # Temp Status of removing a keyword
     def __init__(self):
@@ -138,6 +138,7 @@ class HyprlandSettingsApplication(Adw.Application):
                     value = lib.getKeywordValue(i["value"],self.rowtype)
                 else:
                     value = self.hyprctl[i["value"]]
+
                     # print("Set " + i["value"] + ": " + value)
 
                 # Fill with all keywords and values
@@ -152,6 +153,10 @@ class HyprlandSettingsApplication(Adw.Application):
                         case 1:
                             self.createSpinRow(i,value)
                         case 2:
+                            self.createSpinRow(i,value)
+                        case 3:
+                            i["data"]["min"] = 0
+                            i["data"]["max"] = 1000
                             self.createSpinRow(i,value)
                         case 7:
                             self.createColorRow(i,value)
@@ -190,6 +195,10 @@ class HyprlandSettingsApplication(Adw.Application):
 
         # Check value type
         if row["type"] == 1:
+            climb_rate = 1
+            digits = 0
+            value = int(value)
+        elif row["type"] == 3:
             climb_rate = 1
             digits = 0
             value = int(value)
@@ -357,19 +366,19 @@ class HyprlandSettingsApplication(Adw.Application):
         lib.writeHyprctlJson(result)
 
     def on_help(self, widget, _):
-        subprocess.Popen(["flatpak-spawn", "--host", "xdg-open", "https://github.com/mylinuxforwork/hyprland-settings/wiki"])
+        Gtk.UriLauncher(uri="https://github.com/mylinuxforwork/hyprland-settings/wiki").launch()
 
     def on_check_updates(self, widget, _):
-        subprocess.Popen(["flatpak-spawn", "--host", "xdg-open", "https://github.com/mylinuxforwork/hyprland-settings/releases/latest"])
+        Gtk.UriLauncher(uri="https://github.com/mylinuxforwork/hyprland-settings/releases/latest").launch()
 
     def on_report_issue(self, widget, _):
-        subprocess.Popen(["flatpak-spawn", "--host", "xdg-open", "https://github.com/mylinuxforwork/hyprland-settings/issues"])
+        Gtk.UriLauncher(uri="https://github.com/mylinuxforwork/hyprland-settings/issues").launch()
 
     def on_hyprland_wiki(self, widget, _):
-        subprocess.Popen(["flatpak-spawn", "--host", "xdg-open", "https://wiki.hyprland.org/"])
+        Gtk.UriLauncher(uri="https://wiki.hyprland.org").launch()
 
     def on_hyprland_variables(self, widget, _):
-        subprocess.Popen(["flatpak-spawn", "--host", "xdg-open", "https://wiki.hyprland.org/Configuring/Variables/"])
+        Gtk.UriLauncher(uri="https://wiki.hyprland.org/Configuring/Variables").launch()
 
     # Callback for the app.about action.
     def on_about_action(self, *args):
@@ -377,7 +386,7 @@ class HyprlandSettingsApplication(Adw.Application):
             application_name="ML4W Hyprland Settings App",
             application_icon='com.ml4w.hyprlandsettings',
             developer_name="Stephan Raabe",
-            version="2.1",
+            version="2.2",
             website="https://github.com/mylinuxforwork/hyprland-settings",
             issue_url="https://github.com/mylinuxforwork/hyprland-settings/issues",
             support_url="https://github.com/mylinuxforwork/hyprland-settings/issues",
