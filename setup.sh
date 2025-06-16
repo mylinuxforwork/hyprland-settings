@@ -102,17 +102,6 @@ else
 fi
 
 # ----------------------------------------------------------
-# Install the correct environment
-# ----------------------------------------------------------
-
-if _checkFlatpakAppExists "org.gnome.Platform/x86_64/47"; then
-	echo ":: org.gnome.Platform/x86_64/47 already installed"	
-else
-	echo ":: Installing org.gnome.Platform/x86_64/47"	
-	sudo flatpak install -y flathub org.gnome.Platform/x86_64/47
-fi
-
-# ----------------------------------------------------------
 # Install app
 # ----------------------------------------------------------
 
