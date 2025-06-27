@@ -11,7 +11,8 @@
         "--device=dri",
         "--socket=wayland",
         "--talk-name=org.freedesktop.Flatpak",
-        "--filesystem=home"
+        "--filesystem=home",
+        "--filesystem=xdg-config/gtk-4.0"
     ],
     "cleanup" : [
         "/include",
