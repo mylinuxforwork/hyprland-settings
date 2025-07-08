@@ -11,7 +11,7 @@
   </description>
 
   <developer id="tld.vendor">
-    <name>Stephan Raabe</name>
+    <name>Stephan Raabe (ML4W)</name>
   </developer>
 
   <!-- Requered: Should be a link to the upstream homepage for the component -->
@@ -58,7 +58,7 @@
   </screenshots>
 
   <releases>
-    <release version="2.1" date="2024-01-18">
+    <release version="2.3.1" date="2025-07-08">
       <url type="details">https://github.com/mylinuxforwork/hyprland-settings/blob/master/CHANGELOG.md</url>
       <description translate="no">
         <p>Release description</p>
