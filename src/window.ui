@@ -120,16 +120,6 @@
   <menu id="primary_menu">
     <section>
       <item>
-        <attribute name="label" translatable="yes">Hyprland Wiki</attribute>
-        <attribute name="action">app.hyprland_wiki</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">Variables Overview</attribute>
-        <attribute name="action">app.hyprland_variables</attribute>
-      </item>
-    </section>
-    <section>
-      <item>
         <attribute name="label" translatable="yes">Help</attribute>
         <attribute name="action">app.help</attribute>
       </item>
@@ -141,12 +131,22 @@
         <attribute name="label" translatable="yes">Check for Updates</attribute>
         <attribute name="action">app.check_updates</attribute>
       </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Hyprland Wiki</attribute>
+        <attribute name="action">app.hyprland_wiki</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Variables Overview</attribute>
+        <attribute name="action">app.hyprland_variables</attribute>
+      </item>
+    </section>
+    <section>
       <item>
         <attribute name="label" translatable="yes">About</attribute>
         <attribute name="action">app.about</attribute>
       </item>
-    </section>
-    <section>
       <item>
         <attribute name="label" translatable="yes">Quit</attribute>
         <attribute name="action">app.quit</attribute>

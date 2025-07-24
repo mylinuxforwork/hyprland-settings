@@ -369,7 +369,7 @@ class HyprlandSettingsApplication(Adw.Application):
         Gtk.UriLauncher(uri="https://github.com/mylinuxforwork/hyprland-settings/wiki").launch()
 
     def on_check_updates(self, widget, _):
-        Gtk.UriLauncher(uri="https://github.com/mylinuxforwork/hyprland-settings/releases/latest").launch()
+        Gtk.UriLauncher(uri="https://github.com/mylinuxforwork/hyprland-settings/tree/master?tab=readme-ov-file#update").launch()
 
     def on_report_issue(self, widget, _):
         Gtk.UriLauncher(uri="https://github.com/mylinuxforwork/hyprland-settings/issues").launch()
