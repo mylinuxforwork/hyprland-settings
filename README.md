@@ -23,7 +23,14 @@ Copy the following command into your terminal.
 ```
 bash -c "$(curl -s https://raw.githubusercontent.com/mylinuxforwork/hyprland-settings/master/setup.sh)"
 ```
-> The installation is build with ML4W Packages Installer. https://github.com/mylinuxforwork/packages-installer
+
+## Update
+
+You can check and update the app with the following command:
+
+```
+flatpak update com.ml4w.hyprlandsettings 
+```
 
 ## Uninstall
 
@@ -41,7 +48,7 @@ flatpak run com.ml4w.hyprlandsettings
 
 # Load changes after login
 
-To load your changes after every login into Hyprland, please add the following line to your hyprland.conf
+To load your changes after every login into Hyprland and to restore your values, please add the following line to your hyprland.conf
 
 ```
 exec = ~/.config/com.ml4w.hyprlandsettings/hyprctl.sh
