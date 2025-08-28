@@ -95,6 +95,8 @@ class HyprlandSettingsApplication(Adw.Application):
         # novariables
         self.novariables = win.novariables
 
+        self.data_json = {}
+
         thread = threading.Thread(target=self.initUI)
         thread.daemon = True
         thread.start()
@@ -105,7 +107,9 @@ class HyprlandSettingsApplication(Adw.Application):
         self.win_settings.present(self.props.active_window)
         self.win_settings.set_search_enabled(True)
 
+    # Check if variables are already set
     def check_novariables(self):
+        self.props.active_window.spinner.set_visible(False)
         if len(self.hyprctl) > 0:
             self.keywords_group.set_visible(True)
             self.novariables.set_visible(False)
@@ -118,35 +122,35 @@ class HyprlandSettingsApplication(Adw.Application):
 
         # Get hyprctl dictionary from hyprctl.json
         self.hyprctl = lib.getHyprctlDictionary()
-        self.check_novariables()
 
-        # Load hyprctl descriptions
+        # Load hyprctl keywords descriptions
         config_json = lib.getHyprctlDescriptions()
 
         # Create Rows
-        counter = 0
+        self.create_rows(config_json)
+
+        # Enable UI Elements
+        self.enable_ui_elements()
+
+    # Create Rows
+    def create_rows(self,config_json):
         for i in config_json:
             if i["type"] in self.supported_types:
-
-                # print(i["value"] + ": " + str(i["type"]))
 
                 # Fill rowtype dictionary
                 self.rowtype[i["value"]] = i["type"]
 
                 # Get row values
                 if i["value"] not in self.hyprctl:
-                    value = lib.getKeywordValue(i["value"],self.rowtype)
+                    value = lib.getKeywordValue(i["value"],i["type"])
                 else:
                     value = self.hyprctl[i["value"]]
-
-                    # print("Set " + i["value"] + ": " + value)
 
                 # Fill with all keywords and values
                 self.pref_rows[i["value"]] = value
 
                 # Check for invalid option
                 if value != "no such option":
-                    counter = counter + 1
                     match i["type"]:
                         case 0:
                             self.createSwitchRow(i,value)
@@ -160,6 +164,11 @@ class HyprlandSettingsApplication(Adw.Application):
                             self.createSpinRow(i,value)
                         case 7:
                             self.createColorRow(i,value)
+
+    # Enable UI Elements
+    def enable_ui_elements(self):
+        self.props.active_window.btn_allvariables.set_visible(True)
+        self.check_novariables()
 
     # Toggle keyword between options and keywords group
     def toggle_keyword(self,widget,row,btn,keyword,rtype):
@@ -386,7 +395,7 @@ class HyprlandSettingsApplication(Adw.Application):
             application_name="ML4W Hyprland Settings App",
             application_icon='com.ml4w.hyprlandsettings',
             developer_name="Stephan Raabe",
-            version="2.3.2",
+            version="2.4",
             website="https://github.com/mylinuxforwork/hyprland-settings",
             issue_url="https://github.com/mylinuxforwork/hyprland-settings/issues",
             support_url="https://github.com/mylinuxforwork/hyprland-settings/issues",

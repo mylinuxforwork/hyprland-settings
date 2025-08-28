@@ -18,10 +18,11 @@
             <child type="top">
               <object class="AdwHeaderBar">
                 <child type="start">
-                  <object class="GtkButton">
+                  <object class="GtkButton" id="btn_allvariables">
                     <property name="name">destructive</property>
                     <property name="label" translatable="yes">All Variables</property>
                     <property name="action-name">app.settings</property>
+                    <property name="visible">false</property>
                     <style>
                       <class name="suggested-action"/>
                     </style>
@@ -75,6 +76,15 @@
                       </object>
                     </child>
                     <!-- ML4W Headline -->
+
+                    <child>
+                      <object class="AdwSpinner" id="spinner">
+                        <property name="halign">3</property>
+                        <property name="valign">3</property>
+                        <property name="width-request">48</property>
+                        <property name="height-request">48</property>
+                      </object>
+                    </child>
 
                     <child>
                       <object class="AdwPreferencesGroup" id="keywords_group">

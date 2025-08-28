@@ -122,11 +122,10 @@ class Library:
 
     # Get current value of keyword
     def loadKeywordValue(self,keyword):
-        result = subprocess.Popen(["flatpak-spawn", "--host", "hyprctl", "getoption", keyword], stdout=subprocess.PIPE, text=True)
+        # result = subprocess.Popen(["flatpak-spawn", "--host", "hyprctl", "getoption", keyword], stdout=subprocess.PIPE, text=True)
+        result = subprocess.Popen(["flatpak-spawn", "--host", "hyprctl", "getoption", "-j" , keyword], stdout=subprocess.PIPE, text=True)
         outcome = result.communicate()[0]
-        out_arr = outcome.split("\n")
-        value = outcome.split("\n")[0]
-        return value
+        return outcome
 
     # Create a Switch Row for boolean values
     def createSwitchRow(self,title,description,value):
@@ -170,47 +169,49 @@ class Library:
 
     # Get current keyword value
     def getKeywordValue(self,keyword,rowtype):
-        value = self.loadKeywordValue(keyword)
+        keyword_json = self.loadKeywordValue(keyword).rstrip()
+        value = "no such option"
 
-        # Check if option exists
-        if value != "no such option":
-            if "int" in value:
-                custom_val = value.split("int: ")[1]
-            elif "float" in value:
-                custom_val = value.split("float: ")[1]
-            elif "custom type" in value:
+        if not "no such option" in keyword_json:
+            data = json.loads(keyword_json)
+            items_list = list(data.items())
+            keyword_type = items_list[1][0]
+            keyword_value = items_list[1][1]
+
+            # Check if custom option exists
+            if keyword_type == "custom":
                 if "col" in keyword:
-                    custom_val = value.split("custom type: ")[1]
-                    custom_val = "0x" + custom_val.split(" ")[0]
+                    keyword_value = "0x" + keyword_value.split(" ")[0]
                 else:
-                    custom_val = value.split("custom type: ")[1]
-                    custom_val = custom_val.split(" ")[0]
+                    keyword_value = keyword_value.split(" ")[0]
 
-            if rowtype[keyword] == 0:
-                if custom_val == "1":
+
+
+            if rowtype == 0:
+                if keyword_value == "1":
                     value = True
                 else:
                     value = False
 
-            if rowtype[keyword] == 1:
-                if "int" in value:
-                    value = custom_val
-                else:
-                    value = "no such option"
+            if rowtype == 1:
+                if keyword_type == "int":
+                    value = keyword_value
 
-            if rowtype[keyword] == 7:
-                value = custom_val
+            if rowtype == 7:
+                value = keyword_value
 
-            if rowtype[keyword] == 2:
-                if "float" in value:
-                    value = float(custom_val)
-                else:
-                    value = "no such option"
+            if rowtype == 2:
+                if keyword_type == "float":
+                    value = float(keyword_value)
 
-            if rowtype[keyword] == 3:
-                if "custom" in value:
-                    value = value.split(" ")[2]
-                else:
-                    value = "no such option"
+            if rowtype == 3:
+                if "custom" in str(keyword_value):
+                    value = keyword_value.split(" ")[2]
+
+            data["value"] = value
+            data["type"] = rowtype
+
+            # Debug
+            # print(str(data))
 
         return value

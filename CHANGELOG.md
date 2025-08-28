@@ -1,4 +1,5 @@
-Version 2.1
+Version 2.4
 --------------------------------------------------------
-- Bugfixes
-- Prepared for Flathub
+- Bugfixes and stability improvements
+- Spinner during initialization of the keyword lists
+

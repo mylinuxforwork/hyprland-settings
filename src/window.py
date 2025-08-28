@@ -26,6 +26,8 @@ class HyprlandSettingsWindow(Adw.ApplicationWindow):
 
     keywords_group = Gtk.Template.Child()
     novariables = Gtk.Template.Child()
+    btn_allvariables = Gtk.Template.Child()
+    spinner = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
