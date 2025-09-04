@@ -23,7 +23,19 @@ class Library:
 
     # Load content from hyprctl.json
     def loadHyprctlJson(self):
-        hyprctl_json = open(configFolder + "/hyprctl.json")
+        # hyprctl_json = open(configFolder + "/hyprctl.json")
+        path = configFolder + "/hyprctl.json"
+        try:
+            # If the file is empty then copy the shipped one
+            if os.path.getsize(path) == 0:
+                shutil.copy(path_name + '/json/hyprctl.json', configFolder)
+                hyprctl_json = open(path)
+            # else load normally
+            else:
+                hyprctl_json = open(path)
+        except (json.JSONDecodeError, FileNotFoundError) as err:
+            print(":: Error loading hyprctl.json")
+
         return hyprctl_json
 
     def writeHyprctlJson(self,result):
