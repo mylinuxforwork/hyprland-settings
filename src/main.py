@@ -395,7 +395,7 @@ class HyprlandSettingsApplication(Adw.Application):
             application_name="ML4W Hyprland Settings App",
             application_icon='com.ml4w.hyprlandsettings',
             developer_name="Stephan Raabe",
-            version="2.4",
+            version="2.5",
             website="https://github.com/mylinuxforwork/hyprland-settings",
             issue_url="https://github.com/mylinuxforwork/hyprland-settings/issues",
             support_url="https://github.com/mylinuxforwork/hyprland-settings/issues",

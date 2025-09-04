@@ -58,7 +58,7 @@
   </screenshots>
 
   <releases>
-    <release version="2.3.1" date="2025-07-08">
+    <release version="2.5" date="2025-09-04">
       <url type="details">https://github.com/mylinuxforwork/hyprland-settings/blob/master/CHANGELOG.md</url>
       <description translate="no">
         <p>Release description</p>
