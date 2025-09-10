@@ -190,6 +190,10 @@ class Library:
             keyword_type = items_list[1][0]
             keyword_value = items_list[1][1]
 
+            # print(data) # DEBUG
+            # print(keyword_type) # DEBUG
+            # print(keyword_value) # DEBUG
+
             # Check if custom option exists
             if keyword_type == "custom":
                 if "col" in keyword:
@@ -197,7 +201,7 @@ class Library:
                 else:
                     keyword_value = keyword_value.split(" ")[0]
 
-
+            # print(keyword_value) # DEBUG
 
             if rowtype == 0:
                 if keyword_value == "1":
@@ -217,13 +221,15 @@ class Library:
                     value = float(keyword_value)
 
             if rowtype == 3:
-                if "custom" in str(keyword_value):
-                    value = keyword_value.split(" ")[2]
+                if not keyword_type == "str":
+                    if "custom" in str(keyword_value):
+                        value = keyword_value.split(" ")[2]
+                    else:
+                        value = keyword_value
 
             data["value"] = value
             data["type"] = rowtype
 
-            # Debug
-            # print(str(data))
+            # print(str(data)) # DEBUG
 
         return value

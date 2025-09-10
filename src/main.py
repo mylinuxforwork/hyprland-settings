@@ -146,6 +146,8 @@ class HyprlandSettingsApplication(Adw.Application):
                 else:
                     value = self.hyprctl[i["value"]]
 
+                # print(i["value"] + ": " + str(value)) # DEBUG
+
                 # Fill with all keywords and values
                 self.pref_rows[i["value"]] = value
 
@@ -395,7 +397,7 @@ class HyprlandSettingsApplication(Adw.Application):
             application_name="ML4W Hyprland Settings App",
             application_icon='com.ml4w.hyprlandsettings',
             developer_name="Stephan Raabe",
-            version="2.5",
+            version="2.5.1",
             website="https://github.com/mylinuxforwork/hyprland-settings",
             issue_url="https://github.com/mylinuxforwork/hyprland-settings/issues",
             support_url="https://github.com/mylinuxforwork/hyprland-settings/issues",
