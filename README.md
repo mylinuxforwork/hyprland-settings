@@ -1,5 +1,7 @@
 # ML4W Hyprland Settings App
 
+> The Hyprland Settings app is not supported anymore. From ML4W OS 2.13.0, HyprMod (https://github.com/BlueManCZ/hyprmod) can be optionally installed and will integrate into the Welcome App and Sidebar. 
+
 This applications supports you to customize your Hyprland installation. You can overwrite the existing configuration with custom values without editing complex configuration files. 
 
 The ML4W Hyprland Settings App utilizes hyprctl. It is a utility for controlling some parts of the compositor from a CLI or a script. 
