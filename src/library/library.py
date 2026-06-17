@@ -19,7 +19,7 @@ class Library:
     # Execute hyprctl.sh
     def executeHyprCtl(self):
         print(":: Execute: " + configFolder + "/hyprctl.sh")
-        subprocess.Popen(["flatpak-spawn", "--host", configFolder + "/hyprctl.sh"])
+        subprocess.Popen([configFolder + "/hyprctl.sh"])
 
     # Load content from hyprctl.json
     def loadHyprctlJson(self):
@@ -58,7 +58,7 @@ class Library:
 
     # Load hyprctl descriptions
     def loadHyprctlDescriptions(self):
-        result = subprocess.Popen(["flatpak-spawn", "--host", "hyprctl", "descriptions"], stdout=subprocess.PIPE, text=True)
+        result = subprocess.Popen(["hyprctl", "descriptions"], stdout=subprocess.PIPE, text=True)
         outcome = result.communicate()[0]
         outcome = outcome.replace("{{", "[{")
         outcome = outcome.replace("}}", "}]")
@@ -126,16 +126,16 @@ class Library:
     # Run hyprctl command with keyword and value
     def runHyprctl(self,keyword, value):
         print(":: Execute hyprctl keyword " + keyword + " " + str(value))
-        subprocess.Popen(["flatpak-spawn", "--host", "hyprctl", "keyword", keyword, str(value)])
+        subprocess.Popen(["hyprctl", "keyword", keyword, str(value)])
 
     def reloadHyprctl(self):
         print(":: hyprctl reload")
-        subprocess.Popen(["flatpak-spawn", "--host", "hyprctl", "reload"])
+        subprocess.Popen(["hyprctl", "reload"])
 
     # Get current value of keyword
     def loadKeywordValue(self,keyword):
-        # result = subprocess.Popen(["flatpak-spawn", "--host", "hyprctl", "getoption", keyword], stdout=subprocess.PIPE, text=True)
-        result = subprocess.Popen(["flatpak-spawn", "--host", "hyprctl", "getoption", "-j" , keyword], stdout=subprocess.PIPE, text=True)
+        # result = subprocess.Popen(["hyprctl", "getoption", keyword], stdout=subprocess.PIPE, text=True)
+        result = subprocess.Popen(["hyprctl", "getoption", "-j" , keyword], stdout=subprocess.PIPE, text=True)
         outcome = result.communicate()[0]
         return outcome
 
